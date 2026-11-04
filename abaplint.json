@@ -1,0 +1,94 @@
+{
+  "global": {
+    "files": "/src/**/*.*",
+    "exclude": [],
+    "noIssues": [],
+    "skipGeneratedGatewayClasses": true,
+    "skipGeneratedPersistentClasses": true,
+    "skipGeneratedFunctionGroups": true
+  },
+  "dependencies": [
+    {
+      "url": "https://github.com/abaplint/deps",
+      "folder": "/deps",
+      "files": "/src/**/*.*"
+    }
+  ],
+  "syntax": {
+    "version": "Cloud",
+    "errorNamespace": "^(Z|Y|LCL_|LTC_|LTD_|LIF_|TY_)",
+    "globalConstants": [],
+    "globalMacros": []
+  },
+  "rules": {
+    "begin_end_names": true,
+    "check_ddic": true,
+    "check_include": true,
+    "check_syntax": true,
+    "global_class": true,
+    "implement_methods": true,
+    "method_implemented_twice": true,
+    "parser_error": true,
+    "superclass_final": true,
+    "unknown_types": true,
+    "xml_consistency": true,
+    "avoid_use": {
+      "define": true,
+      "statics": true,
+      "defaultKey": true,
+      "break": true,
+      "testSeams": true,
+      "describeLines": true,
+      "exportToMemory": true,
+      "exportToDatabase": true
+    },
+    "method_length": {
+      "statements": 50,
+      "errorWhenEmpty": false,
+      "ignoreTestClasses": false,
+      "checkForms": true
+    },
+    "line_length": {
+      "length": 140
+    },
+    "max_one_statement": true,
+    "obsolete_statement": true,
+    "prefer_inline": true,
+    "prefer_xsdbool": true,
+    "preferred_compare_operator": true,
+    "unused_variables": {
+      "exclude": ["zcx_vhb_app_log\\.clas\\.abap$"]
+    },
+    "unused_types": true,
+    "use_new": true,
+    "keyword_case": true,
+    "exporting": true,
+    "functional_writing": true,
+    "contains_tab": true,
+    "empty_statement": true,
+    "colon_missing_space": true,
+    "double_space": true,
+    "space_before_dot": true,
+    "sequential_blank": {
+      "lines": 4
+    },
+    "local_variable_names": {
+      "patternKind": "forbidden",
+      "expectedData": "^L[VSTROI]_",
+      "expectedConstant": "^LC_",
+      "expectedFS": "^<L[VSTROI]_",
+      "ignoreNames": [],
+      "ignorePatterns": []
+    },
+    "method_parameter_names": {
+      "patternKind": "forbidden",
+      "importing": "^I[VSTROI]_",
+      "returning": "^R[VSTROI]_",
+      "changing": "^C[VSTROI]_",
+      "exporting": "^E[VSTROI]_",
+      "ignoreNames": [],
+      "ignorePatterns": [],
+      "ignoreExceptions": true
+    }
+  }
+}
