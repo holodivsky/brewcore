@@ -63,7 +63,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 
 | Tag | Stage | Status |
 |---|---|---|
-| [v0.1](docs/stages/v0.1.md) | Foundation: packages, DDIC basics, number ranges, application log, CI | in progress |
+| [v0.1](https://github.com/holodivsky/brewcore/releases/tag/v0.1) | Foundation: packages, DDIC basics, number ranges, application log, CI | released |
 | v0.2 | Master data | planned |
 | v0.3 | Recipes and fermentation tanks | planned |
 | v0.4 | Inventory and batches | planned |
