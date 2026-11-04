@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZVHB_IM</ARBGB>
+    <STEXT>BrewCore: Inventory messages</STEXT>
+   </T100A>
+   <I18N_LANGS>
+    <LANGU/>
+   </I18N_LANGS>
+   <T100T>
+    <T100T>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <STEXT>BrewCore: Inventory messages</STEXT>
+    </T100T>
+   </T100T>
+  </asx:values>
+ </asx:abap>
+</abapGit>

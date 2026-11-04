@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZVHB_CORE</ARBGB>
+    <STEXT>BrewCore: Core messages</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>&amp;1&amp;2&amp;3&amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Field &amp;1 is mandatory</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Value &amp;1 is not valid for field &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>No number available in number range object &amp;1, interval &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Application log could not be saved: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Interval &amp;1 of number range object &amp;2 created</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Interval &amp;1 of number range object &amp;2 already exists</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Interval &amp;1 of number range object &amp;2 not created: &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Number range setup finished without errors (&amp;1 objects)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Number range setup finished with errors, see log &amp;1 / &amp;2</TEXT>
+    </T100>
+   </T100>
+   <I18N_LANGS>
+    <LANGU/>
+   </I18N_LANGS>
+   <T100T>
+    <T100T>
+     <ARBGB>ZVHB_CORE</ARBGB>
+     <STEXT>BrewCore: Core messages</STEXT>
+    </T100T>
+   </T100T>
+  </asx:values>
+ </asx:abap>
+</abapGit>
