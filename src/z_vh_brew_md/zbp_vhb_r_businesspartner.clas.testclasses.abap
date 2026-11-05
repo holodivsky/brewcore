@@ -67,7 +67,7 @@ CLASS ltc_partner DEFINITION FINAL
         payment_terms TYPE zvhb_pay_terms DEFAULT 'NT30'
         credit_limit  TYPE zvhb_amount DEFAULT 0
         role          TYPE zvhb_bp_role DEFAULT 'SU'
-        is_draft      TYPE abp_behv_flag DEFAULT if_abap_behv=>mk-off
+        draft         TYPE abp_behv_flag DEFAULT if_abap_behv=>mk-off
       RETURNING
         VALUE(result) TYPE ty_mapped.
 
@@ -113,7 +113,7 @@ CLASS ltc_partner IMPLEMENTATION.
       ENTITY Partner
         CREATE FIELDS ( PartnerName Country Currency PaymentTerms CreditLimit )
         WITH VALUE #( ( %cid         = 'PARTNER'
-                        %is_draft    = is_draft
+                        %is_draft    = draft
                         PartnerName  = name
                         Country      = country
                         Currency     = currency
@@ -123,9 +123,9 @@ CLASS ltc_partner IMPLEMENTATION.
         FIELDS ( PartnerRole )
         WITH COND #( WHEN role IS NOT INITIAL
                      THEN VALUE #( ( %cid_ref  = 'PARTNER'
-                                     %is_draft = is_draft
+                                     %is_draft = draft
                                      %target   = VALUE #( ( %cid        = 'ROLE'
-                                                            %is_draft   = is_draft
+                                                            %is_draft   = draft
                                                             PartnerRole = role ) ) ) ) )
       MAPPED result.
   ENDMETHOD.
@@ -207,7 +207,8 @@ CLASS ltc_partner IMPLEMENTATION.
   METHOD unknown_payment_terms_fail.
     DATA(mapped) = create_partner( payment_terms = 'XXXX' ).
 
-    partner_handler->validatepaymentterms( EXPORTING keys = CORRESPONDING #( mapped-partner ) CHANGING failed = failed reported = reported ).
+    partner_handler->validatepaymentterms( EXPORTING keys = CORRESPONDING #( mapped-partner )
+                                           CHANGING failed = failed reported = reported ).
 
     assert_error( '015' ).
   ENDMETHOD.
@@ -215,7 +216,8 @@ CLASS ltc_partner IMPLEMENTATION.
   METHOD known_payment_terms_pass.
     DATA(mapped) = create_partner( payment_terms = 'NT30' ).
 
-    partner_handler->validatepaymentterms( EXPORTING keys = CORRESPONDING #( mapped-partner ) CHANGING failed = failed reported = reported ).
+    partner_handler->validatepaymentterms( EXPORTING keys = CORRESPONDING #( mapped-partner )
+                                           CHANGING failed = failed reported = reported ).
 
     cl_abap_unit_assert=>assert_initial( failed-partner ).
   ENDMETHOD.
@@ -276,7 +278,7 @@ CLASS ltc_partner IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD draft_cannot_be_blocked.
-    DATA(features) = get_features( create_partner( is_draft = if_abap_behv=>mk-on ) ).
+    DATA(features) = get_features( create_partner( draft = if_abap_behv=>mk-on ) ).
 
     cl_abap_unit_assert=>assert_equals( act = features[ 1 ]-%action-block exp = if_abap_behv=>fc-o-disabled ).
     cl_abap_unit_assert=>assert_equals( act = features[ 1 ]-%action-unblock exp = if_abap_behv=>fc-o-disabled ).

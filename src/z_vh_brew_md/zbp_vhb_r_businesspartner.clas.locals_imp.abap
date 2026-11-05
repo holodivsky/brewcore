@@ -61,7 +61,7 @@ CLASS lhc_partner DEFINITION INHERITING FROM cl_abap_behavior_handler FRIENDS lt
     METHODS set_blocked
       IMPORTING
         partner_keys  TYPE tt_partner_keys
-        is_blocked    TYPE abap_boolean
+        blocked       TYPE abap_boolean
       RETURNING
         VALUE(result) TYPE tt_partners.
 
@@ -102,13 +102,13 @@ CLASS lhc_partner IMPLEMENTATION.
 
   METHOD block.
     DATA(partners) = set_blocked( partner_keys = CORRESPONDING #( keys )
-                                  is_blocked   = abap_true ).
+                                  blocked      = abap_true ).
     result = VALUE #( FOR partner IN partners ( %tky = partner-%tky %param = partner ) ).
   ENDMETHOD.
 
   METHOD unblock.
     DATA(partners) = set_blocked( partner_keys = CORRESPONDING #( keys )
-                                  is_blocked   = abap_false ).
+                                  blocked      = abap_false ).
     result = VALUE #( FOR partner IN partners ( %tky = partner-%tky %param = partner ) ).
   ENDMETHOD.
 
@@ -116,7 +116,7 @@ CLASS lhc_partner IMPLEMENTATION.
     MODIFY ENTITIES OF zvhb_r_businesspartner IN LOCAL MODE
       ENTITY Partner
         UPDATE FIELDS ( IsBlocked )
-        WITH VALUE #( FOR key IN partner_keys ( %tky = key-%tky IsBlocked = is_blocked ) ).
+        WITH VALUE #( FOR key IN partner_keys ( %tky = key-%tky IsBlocked = blocked ) ).
 
     READ ENTITIES OF zvhb_r_businesspartner IN LOCAL MODE
       ENTITY Partner

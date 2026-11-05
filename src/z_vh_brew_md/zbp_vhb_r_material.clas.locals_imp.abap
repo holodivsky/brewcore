@@ -52,7 +52,7 @@ CLASS lhc_material DEFINITION INHERITING FROM cl_abap_behavior_handler FRIENDS l
     METHODS set_status
       IMPORTING
         material_keys TYPE tt_material_keys
-        is_active     TYPE abap_boolean
+        active        TYPE abap_boolean
       RETURNING
         VALUE(result) TYPE tt_materials.
 ENDCLASS.
@@ -104,13 +104,13 @@ CLASS lhc_material IMPLEMENTATION.
 
   METHOD reactivate.
     DATA(materials) = set_status( material_keys = CORRESPONDING #( keys )
-                                  is_active     = abap_true ).
+                                  active        = abap_true ).
     result = VALUE #( FOR material IN materials ( %tky = material-%tky %param = material ) ).
   ENDMETHOD.
 
   METHOD deactivate.
     DATA(materials) = set_status( material_keys = CORRESPONDING #( keys )
-                                  is_active     = abap_false ).
+                                  active        = abap_false ).
     result = VALUE #( FOR material IN materials ( %tky = material-%tky %param = material ) ).
   ENDMETHOD.
 
@@ -118,7 +118,7 @@ CLASS lhc_material IMPLEMENTATION.
     MODIFY ENTITIES OF zvhb_r_material IN LOCAL MODE
       ENTITY Material
         UPDATE FIELDS ( IsActive )
-        WITH VALUE #( FOR key IN material_keys ( %tky = key-%tky IsActive = is_active ) ).
+        WITH VALUE #( FOR key IN material_keys ( %tky = key-%tky IsActive = active ) ).
 
     READ ENTITIES OF zvhb_r_material IN LOCAL MODE
       ENTITY Material
@@ -254,8 +254,8 @@ CLASS lhc_material IMPLEMENTATION.
     LOOP AT materials INTO DATA(material).
       APPEND VALUE #( %tky = material-%tky %state_area = 'BATCH_MANAGEMENT' ) TO reported-material.
 
-      IF     (    material-MaterialType = batch_managed_type-finished_product
-               OR material-MaterialType = batch_managed_type-raw_material )
+      IF (    material-MaterialType = batch_managed_type-finished_product
+           OR material-MaterialType = batch_managed_type-raw_material )
          AND material-IsBatchManaged = abap_false.
         APPEND VALUE #( %tky = material-%tky ) TO failed-material.
         APPEND VALUE #( %tky                    = material-%tky

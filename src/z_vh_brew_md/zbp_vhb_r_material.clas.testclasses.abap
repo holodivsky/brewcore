@@ -49,9 +49,9 @@ CLASS ltc_material DEFINITION FINAL
         material         TYPE zvhb_material DEFAULT 'PILS-BTL05'
         material_type    TYPE zvhb_material_type DEFAULT 'FERT'
         base_unit        TYPE zvhb_unit DEFAULT 'ST'
-        is_batch_managed TYPE abap_boolean DEFAULT abap_true
+        batch_managed    TYPE abap_boolean DEFAULT abap_true
         shelf_life_days  TYPE int2 DEFAULT 180
-        is_draft         TYPE abp_behv_flag DEFAULT if_abap_behv=>mk-off
+        draft            TYPE abp_behv_flag DEFAULT if_abap_behv=>mk-off
       RETURNING
         VALUE(result)    TYPE ty_mapped.
 
@@ -112,11 +112,11 @@ CLASS ltc_material IMPLEMENTATION.
       ENTITY Material
         CREATE FIELDS ( Material MaterialType BaseUnit IsBatchManaged ShelfLifeDays )
         WITH VALUE #( ( %cid           = 'MATERIAL'
-                        %is_draft      = is_draft
+                        %is_draft      = draft
                         Material       = material
                         MaterialType   = material_type
                         BaseUnit       = base_unit
-                        IsBatchManaged = is_batch_managed
+                        IsBatchManaged = batch_managed
                         ShelfLifeDays  = shelf_life_days ) )
       MAPPED result.
   ENDMETHOD.
@@ -208,7 +208,7 @@ CLASS ltc_material IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD product_without_batches_fails.
-    validate_material( create_material( is_batch_managed = abap_false ) ).
+    validate_material( create_material( batch_managed = abap_false ) ).
 
     assert_error( '004' ).
   ENDMETHOD.
@@ -222,7 +222,7 @@ CLASS ltc_material IMPLEMENTATION.
   METHOD packaging_without_batches_ok.
     validate_material( create_material( material         = 'CRATE-20'
                                         material_type    = 'VERP'
-                                        is_batch_managed = abap_false
+                                        batch_managed    = abap_false
                                         shelf_life_days  = 0 ) ).
 
     cl_abap_unit_assert=>assert_initial( failed-material ).
@@ -240,7 +240,7 @@ CLASS ltc_material IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD product_gets_batch_management.
-    DATA(mapped) = create_material( is_batch_managed = abap_false ).
+    DATA(mapped) = create_material( batch_managed = abap_false ).
 
     material_handler->setbatchmanagement( keys = CORRESPONDING #( mapped-material ) ).
 
@@ -344,7 +344,7 @@ CLASS ltc_material IMPLEMENTATION.
   METHOD draft_has_no_status_actions.
     " Creating a draft checks the key against the database, so use a number no real material has
     DATA(features) = get_features( create_material( material = 'ZZ-UNIT-TEST-DRAFT'
-                                                    is_draft = if_abap_behv=>mk-on ) ).
+                                                    draft    = if_abap_behv=>mk-on ) ).
 
     cl_abap_unit_assert=>assert_equals( act = features[ 1 ]-%action-deactivate exp = if_abap_behv=>fc-o-disabled ).
     cl_abap_unit_assert=>assert_equals( act = features[ 1 ]-%action-reactivate exp = if_abap_behv=>fc-o-disabled ).
