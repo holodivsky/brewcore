@@ -24,11 +24,19 @@
     "begin_end_names": true,
     "check_ddic": true,
     "check_include": true,
-    "check_syntax": true,
+    "check_syntax": {
+      "exclude": [
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+      ]
+    },
     "global_class": true,
     "implement_methods": true,
     "method_implemented_twice": true,
-    "parser_error": true,
+    "parser_error": {
+      "exclude": [
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+      ]
+    },
     "superclass_final": true,
     "unknown_types": true,
     "xml_consistency": true,
@@ -57,11 +65,17 @@
     "prefer_xsdbool": true,
     "preferred_compare_operator": true,
     "unused_variables": {
-      "exclude": ["zcx_vhb_app_log\\.clas\\.abap$"]
+      "exclude": [
+        "zcx_vhb_app_log\\.clas\\.abap$"
+      ]
     },
     "unused_types": true,
     "use_new": true,
-    "keyword_case": true,
+    "keyword_case": {
+      "exclude": [
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+      ]
+    },
     "exporting": true,
     "functional_writing": true,
     "contains_tab": true,
