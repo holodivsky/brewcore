@@ -311,10 +311,10 @@ CLASS lhc_material_document IMPLEMENTATION.
 
     IF sy-subrc <> 0.
       result = error( number = '009' v1 = movement-Batch v2 = movement-Material ).
-    ELSEIF     is_issue( movement-MovementType ) = abap_true
-           AND movement-MovementType <> movement_types-scrapping
-           AND expiry_date IS NOT INITIAL
-           AND expiry_date < cl_abap_context_info=>get_system_date( ).
+    ELSEIF is_issue( movement-MovementType ) = abap_true
+       AND movement-MovementType <> movement_types-scrapping
+       AND expiry_date IS NOT INITIAL
+       AND expiry_date < cl_abap_context_info=>get_system_date( ).
       result = error( number = '010' v1 = movement-Batch v2 = |{ expiry_date DATE = ISO }| ).
     ENDIF.
   ENDMETHOD.
@@ -484,10 +484,10 @@ CLASS lhc_material_document IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD is_issue.
-    result = xsdbool(    movement_type = movement_types-production_issue
-                      OR movement_type = movement_types-transfer
-                      OR movement_type = movement_types-scrapping
-                      OR movement_type = movement_types-delivery ).
+    result = xsdbool( movement_type = movement_types-production_issue
+                   OR movement_type = movement_types-transfer
+                   OR movement_type = movement_types-scrapping
+                   OR movement_type = movement_types-delivery ).
   ENDMETHOD.
 
   METHOD error.
