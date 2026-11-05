@@ -1,0 +1,17 @@
+projection;
+strict ( 2 );
+
+define behavior for ZVHB_C_MaterialDocument alias MaterialDocument
+{
+
+  use action postGoodsMovement;
+  use action reverse;
+
+  use association _Item;
+}
+
+define behavior for ZVHB_C_MaterialDocumentItem alias Item
+{
+
+  use association _MaterialDocument;
+}

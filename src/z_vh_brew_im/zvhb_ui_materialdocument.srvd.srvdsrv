@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Material document UI service'
+define service ZVHB_UI_MATERIALDOCUMENT
+{
+  expose ZVHB_C_MaterialDocument     as MaterialDocuments;
+  expose ZVHB_C_MaterialDocumentItem as MaterialDocumentItems;
+
+  expose ZVHB_I_MaterialVH           as Materials;
+  expose ZVHB_I_PlantVH              as Plants;
+  expose ZVHB_I_StorageLocVH         as StorageLocations;
+  expose ZVHB_I_MovementTypeVH       as MovementTypes;
+}

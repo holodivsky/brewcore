@@ -66,6 +66,9 @@ CLASS zcl_vhb_demo_data DEFINITION
     METHODS create_recipes.
     METHODS create_tanks.
 
+    "! Initial stock entries (movement type 561); each receipt of a batch-managed material creates a new batch
+    METHODS create_initial_stock.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -86,6 +89,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_prices( ).
     create_recipes( ).
     create_tanks( ).
+    create_initial_stock( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -420,6 +424,65 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
 
     LOOP AT tanks INTO DATA(tank).
       out->write( |Tank { tank-tank } created| ).
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD create_initial_stock.
+    TYPES tt_movements TYPE STANDARD TABLE OF zvhb_d_goodsmovement WITH EMPTY KEY.
+
+    " Two Pils batches with different best-before dates show FEFO; one yeast batch is already expired
+    DATA(movements) = VALUE tt_movements(
+      ( Material = 'MALT-PILS'  StorageLocation = 'RM01' Quantity = 5000 ProductionDate = '20261001' )
+      ( Material = 'HOPS-HALL'  StorageLocation = 'RM01' Quantity = 300  ProductionDate = '20260915' )
+      ( Material = 'YEAST-W34'  StorageLocation = 'RM01' Quantity = 80   ProductionDate = '20261028' )
+      ( Material = 'YEAST-W34'  StorageLocation = 'RM01' Quantity = 10   ProductionDate = '20260901' )
+      ( Material = 'PILS-BTL05' StorageLocation = 'FG01' Quantity = 4800 ProductionDate = '20260601' )
+      ( Material = 'PILS-BTL05' StorageLocation = 'FG01' Quantity = 9600 ProductionDate = '20260915' )
+      ( Material = 'CRATE-20'   StorageLocation = 'LE01' Quantity = 2000 ) ).
+
+    SELECT DISTINCT material FROM zvhb_mdocitm
+      WHERE movement_type = '561'
+      INTO TABLE @DATA(posted).
+
+    LOOP AT posted INTO DATA(found).
+      DELETE movements WHERE Material = found-material.
+      out->write( |Initial stock of { found-material } exists, skipped| ).
+    ENDLOOP.
+
+    IF movements IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_materialdocument
+      ENTITY MaterialDocument
+        EXECUTE postGoodsMovement
+        FROM VALUE #( FOR m IN movements INDEX INTO i
+                      ( %cid   = |STOCK{ i }|
+                        %param = VALUE #( BASE m
+                                          MovementType = '561'
+                                          Plant        = c_brewery
+                                          HeaderText   = 'Initial stock' ) ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_materialdocument
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Initial stock not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    LOOP AT movements INTO DATA(movement).
+      out->write( |Initial stock { movement-Quantity } of { movement-Material } posted| ).
     ENDLOOP.
   ENDMETHOD.
 

@@ -1,0 +1,54 @@
+managed with unmanaged save implementation in class zbp_vhb_r_materialdocument unique;
+strict ( 2 );
+
+// Append-only journal: documents are created through the actions only and never changed.
+// A reversal is a new document that points to the original one.
+define behavior for ZVHB_R_MaterialDocument alias MaterialDocument
+late numbering
+lock master
+authorization master ( global )
+{
+  internal create;
+  association _Item { internal create; }
+
+  field ( readonly ) MaterialDocument, PostingDate, HeaderText, ReversedDocument, CreatedBy, CreatedAt;
+
+  static factory action postGoodsMovement parameter ZVHB_D_GoodsMovement [1];
+  factory action ( features : instance ) reverse [1];
+
+  mapping for zvhb_mdochdr
+  {
+    MaterialDocument = material_document;
+    PostingDate      = posting_date;
+    HeaderText       = header_text;
+    ReversedDocument = reversed_document;
+    CreatedBy        = created_by;
+    CreatedAt        = created_at;
+  }
+}
+
+define behavior for ZVHB_R_MaterialDocumentItem alias Item
+late numbering
+lock dependent by _MaterialDocument
+authorization dependent by _MaterialDocument
+{
+  association _MaterialDocument;
+
+  field ( readonly ) MaterialDocument, Item, MovementType, Material, Plant, StorageLocation, ReceivingLocation,
+                     Batch, Unit, Quantity, ReversedItem;
+
+  mapping for zvhb_mdocitm
+  {
+    MaterialDocument  = material_document;
+    Item              = item;
+    MovementType      = movement_type;
+    Material          = material;
+    Plant             = plant;
+    StorageLocation   = storage_location;
+    ReceivingLocation = receiving_location;
+    Batch             = batch;
+    Unit              = unit;
+    Quantity          = quantity;
+    ReversedItem      = reversed_item;
+  }
+}

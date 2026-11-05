@@ -6,6 +6,116 @@
     <ARBGB>ZVHB_IM</ARBGB>
     <STEXT>BrewCore: Inventory messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Movement type &amp;1 is not valid for a manual posting</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Material &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Material &amp;1 is inactive</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Plant &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Storage location &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Quantity must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Material &amp;1 is batch-managed, a batch is required</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Material &amp;1 is not batch-managed, no batch allowed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Batch &amp;1 of material &amp;2 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Batch &amp;1 expired on &amp;2 and cannot be issued</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Only &amp;1 of material &amp;2 available in storage location &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>No batch of material &amp;1 has &amp;2 free in storage location &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Transfer posting needs a different receiving storage location</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Material document &amp;1 is already reversed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Material document &amp;1 is a reversal and cannot be reversed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>No material document number assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>No batch number assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Stock of material &amp;1 was used, the receipt cannot be reversed</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

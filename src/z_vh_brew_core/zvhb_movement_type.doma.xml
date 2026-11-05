@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DOMA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD01V>
+    <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <DATATYPE>CHAR</DATATYPE>
+    <LENG>000003</LENG>
+    <OUTPUTLEN>000003</OUTPUTLEN>
+    <VALEXI>X</VALEXI>
+    <DDTEXT>BrewCore: Movement type</DDTEXT>
+    <DOMMASTER>E</DOMMASTER>
+   </DD01V>
+   <DD07V_TAB>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0001</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>101</DOMVALUE_L>
+     <DDTEXT>Goods receipt</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0002</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>102</DOMVALUE_L>
+     <DDTEXT>Goods receipt reversal</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0003</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>261</DOMVALUE_L>
+     <DDTEXT>Goods issue to production</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0004</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>262</DOMVALUE_L>
+     <DDTEXT>Goods issue reversal</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0005</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>311</DOMVALUE_L>
+     <DDTEXT>Transfer posting</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0006</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>312</DOMVALUE_L>
+     <DDTEXT>Transfer posting reversal</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0007</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>551</DOMVALUE_L>
+     <DDTEXT>Scrapping</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0008</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>552</DOMVALUE_L>
+     <DDTEXT>Scrapping reversal</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0009</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>561</DOMVALUE_L>
+     <DDTEXT>Initial stock entry</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0010</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>562</DOMVALUE_L>
+     <DDTEXT>Initial stock entry reversal</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0011</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>601</DOMVALUE_L>
+     <DDTEXT>Goods issue for delivery</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0012</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>602</DOMVALUE_L>
+     <DDTEXT>Delivery reversal</DDTEXT>
+    </DD07V>
+   </DD07V_TAB>
+  </asx:values>
+ </asx:abap>
+</abapGit>

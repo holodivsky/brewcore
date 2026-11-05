@@ -1,0 +1,35 @@
+managed implementation in class zbp_vhb_r_batch unique;
+strict ( 2 );
+
+define behavior for ZVHB_R_Batch alias Batch
+persistent table zvhb_batches
+lock master
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  // Batches are created by goods receipts and changed only through the status actions
+  create ( authorization : global );
+  internal update;
+
+  field ( mandatory : create, readonly : update ) Material, Batch, ProductionDate;
+  field ( readonly ) ExpiryDate, Status, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  action ( features : instance ) block result [1] $self;
+  action ( features : instance ) release result [1] $self;
+
+  determination setDefaults on modify { create; }
+
+  mapping for zvhb_batches
+  {
+    Material           = material;
+    Batch              = batch;
+    ProductionDate     = production_date;
+    ExpiryDate         = expiry_date;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

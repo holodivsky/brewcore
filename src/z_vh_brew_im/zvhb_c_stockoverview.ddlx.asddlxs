@@ -1,0 +1,77 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Stock',
+  typeNamePlural: 'Stock',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'Batch' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Material', direction: #ASC }, { by: 'ExpiryDate', direction: #ASC }] }]
+annotate entity ZVHB_C_StockOverview with
+{
+  @UI.facet: [{ id: 'Stock', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Stock', position: 10 }]
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.lineItem: [{ position: 20, importance: #MEDIUM }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Plant;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  StorageLocation;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  Batch;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.hidden: true
+  PlantName;
+
+  @UI.hidden: true
+  StorageLocationName;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  ExpiryDate;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 60 }]
+  RemainingShelfLife;
+
+  @UI.identification: [{ position: 70 }]
+  @UI.selectionField: [{ position: 40 }]
+  IsExpired;
+
+  @UI.identification: [{ position: 80 }]
+  @UI.textArrangement: #TEXT_ONLY
+  BatchStatus;
+
+  @UI.hidden: true
+  BatchStatusName;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  @UI.identification: [{ position: 90 }]
+  FreeQuantity;
+
+  @UI.lineItem: [{ position: 80, importance: #HIGH }]
+  @UI.identification: [{ position: 100 }]
+  BlockedQuantity;
+
+  @UI.lineItem: [{ position: 90, importance: #MEDIUM }]
+  @UI.identification: [{ position: 110 }]
+  TotalQuantity;
+}

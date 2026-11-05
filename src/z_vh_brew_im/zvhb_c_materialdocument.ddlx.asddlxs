@@ -1,0 +1,50 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Material Document',
+  typeNamePlural: 'Material Documents',
+  title: { type: #STANDARD, value: 'MaterialDocument' },
+  description: { type: #STANDARD, value: 'HeaderText' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'MaterialDocument', direction: #DESC }] }]
+annotate entity ZVHB_C_MaterialDocument with
+{
+  @UI.facet: [
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Items',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_Item' }
+  ]
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'postGoodsMovement', label: 'Post Goods Movement' },
+    { type: #FOR_ACTION, dataAction: 'reverse', label: 'Reverse' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'reverse', label: 'Reverse' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  MaterialDocument;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  PostingDate;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  HeaderText;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  ReversedDocument;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  ReversalDocument;
+
+  @UI.lineItem: [{ position: 60, importance: #LOW }]
+  @UI.identification: [{ position: 60 }]
+  CreatedBy;
+
+  @UI.identification: [{ position: 70 }]
+  CreatedAt;
+}

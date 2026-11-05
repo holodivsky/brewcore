@@ -1,0 +1,8 @@
+projection;
+strict ( 2 );
+
+define behavior for ZVHB_C_Batch alias Batch
+{
+  use action block;
+  use action release;
+}

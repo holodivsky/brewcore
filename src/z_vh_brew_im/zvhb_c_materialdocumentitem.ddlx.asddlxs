@@ -1,0 +1,65 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Item',
+  typeNamePlural: 'Items',
+  title: { type: #STANDARD, value: 'Item' },
+  description: { type: #STANDARD, value: 'MaterialName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Item', direction: #ASC }] }]
+annotate entity ZVHB_C_MaterialDocumentItem with
+{
+  @UI.facet: [{ id: 'Item', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Item', position: 10 }]
+
+  @UI.hidden: true
+  MaterialDocument;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Item;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  MovementType;
+
+  @UI.hidden: true
+  MovementTypeName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  Plant;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  StorageLocation;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 60 }]
+  ReceivingLocation;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  @UI.identification: [{ position: 70 }]
+  Batch;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  @UI.identification: [{ position: 80 }]
+  ExpiryDate;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 90, importance: #HIGH }]
+  @UI.identification: [{ position: 90 }]
+  Quantity;
+
+  @UI.identification: [{ position: 100 }]
+  ReversedItem;
+}

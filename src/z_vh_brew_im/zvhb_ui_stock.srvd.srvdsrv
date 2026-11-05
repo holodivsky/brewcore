@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Stock and batch UI service'
+define service ZVHB_UI_STOCK
+{
+  expose ZVHB_C_StockOverview as StockOverview;
+  expose ZVHB_C_Batch         as Batches;
+
+  expose ZVHB_I_MaterialVH    as Materials;
+  expose ZVHB_I_PlantVH       as Plants;
+  expose ZVHB_I_StorageLocVH  as StorageLocations;
+  expose ZVHB_I_BatchStatusVH as BatchStatuses;
+}
