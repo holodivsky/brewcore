@@ -1,0 +1,125 @@
+managed implementation in class zbp_vhb_r_recipe unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_Recipe alias Recipe
+persistent table zvhb_recipe
+draft table zvhb_recipe_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Version { create; with draft; }
+
+  field ( numbering : managed, readonly ) RecipeUUID;
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Material;
+
+  validation validateMaterial on save { create; field Material; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateMaterial;
+    validation Version~validateVersion;
+    validation Version~validateSingleActive;
+    validation Version~validateComponents;
+    validation Component~validateComponent;
+  }
+
+  mapping for zvhb_recipe
+  {
+    RecipeUUID         = recipe_uuid;
+    Material           = material;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_RecipeVersion alias Version
+persistent table zvhb_rcpver
+draft table zvhb_rcpver_d
+lock dependent by _Recipe
+authorization dependent by _Recipe
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  association _Recipe { with draft; }
+  association _Component { create; with draft; }
+
+  field ( numbering : managed, readonly ) VersionUUID;
+  field ( readonly ) RecipeUUID, Version, YieldUnit, LocalLastChangedAt;
+  field ( mandatory ) YieldQuantity, TargetGravity, TargetAlcohol, FermentationDays;
+
+  determination setDefaults on modify { create; }
+
+  validation validateVersion on save { create; field YieldQuantity, TargetGravity, TargetAlcohol, FermentationDays, MaturationDays; }
+  validation validateSingleActive on save { create; field IsActive; }
+  validation validateComponents on save { create; field IsActive; }
+
+  mapping for zvhb_rcpver
+  {
+    RecipeUUID         = recipe_uuid;
+    VersionUUID        = version_uuid;
+    Version            = version;
+    IsActive           = is_active;
+    YieldUnit          = yield_unit;
+    YieldQuantity      = yield_quantity;
+    TargetGravity      = target_gravity;
+    TargetAlcohol      = target_alcohol;
+    FermentationDays   = fermentation_days;
+    MaturationDays     = maturation_days;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_RecipeComponent alias Component
+persistent table zvhb_rcpcomp
+draft table zvhb_rcpcomp_d
+lock dependent by _Recipe
+authorization dependent by _Recipe
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  association _Recipe { with draft; }
+  association _Version { with draft; }
+
+  field ( numbering : managed, readonly ) ComponentUUID;
+  field ( readonly ) RecipeUUID, VersionUUID, Unit, LocalLastChangedAt;
+  field ( mandatory ) Material, Quantity;
+
+  determination setUnit on modify { create; field Material; }
+
+  validation validateComponent on save { create; field Material, Quantity; }
+
+  side effects
+  {
+    field Material affects field Unit;
+  }
+
+  mapping for zvhb_rcpcomp
+  {
+    RecipeUUID         = recipe_uuid;
+    VersionUUID        = version_uuid;
+    ComponentUUID      = component_uuid;
+    Material           = material;
+    Unit               = unit;
+    Quantity           = quantity;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

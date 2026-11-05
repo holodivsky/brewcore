@@ -193,6 +193,90 @@
      <MSGNR>031</MSGNR>
      <TEXT>Currency is required</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>032</MSGNR>
+     <TEXT>Recipe material &amp;1 must be a finished product</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>033</MSGNR>
+     <TEXT>A recipe for material &amp;1 already exists</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>034</MSGNR>
+     <TEXT>Recipe for &amp;1 has &amp;2 active versions, only one is allowed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>035</MSGNR>
+     <TEXT>Active version &amp;1 needs at least one component</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>036</MSGNR>
+     <TEXT>Yield of version &amp;1 must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>037</MSGNR>
+     <TEXT>Target gravity of version &amp;1 must be between 1 and 30 °P</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>038</MSGNR>
+     <TEXT>Target alcohol of version &amp;1 must be between 0 and 15 % vol</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>039</MSGNR>
+     <TEXT>Fermentation in version &amp;1 must take at least one day</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>040</MSGNR>
+     <TEXT>Maturation days in version &amp;1 must not be negative</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>041</MSGNR>
+     <TEXT>Component &amp;1 must be a raw material</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>042</MSGNR>
+     <TEXT>Quantity of component &amp;1 must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>043</MSGNR>
+     <TEXT>Component &amp;1 appears more than once in version &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>044</MSGNR>
+     <TEXT>Tank &amp;1 may contain only A-Z, 0-9 and hyphens</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>045</MSGNR>
+     <TEXT>Capacity of tank &amp;1 must be greater than zero</TEXT>
+    </T100>
    </T100>
    <I18N_LANGS>
     <LANGU/>

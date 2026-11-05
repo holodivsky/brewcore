@@ -1,0 +1,71 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Fermentation Tank',
+  typeNamePlural: 'Fermentation Tanks',
+  title: { type: #STANDARD, value: 'Tank' },
+  description: { type: #STANDARD, value: 'Description' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Tank', direction: #ASC }] }]
+annotate entity ZVHB_C_FermentationTank with
+{
+  @UI.facet: [
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 20, targetQualifier: 'Admin' }
+  ]
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'startCleaning', label: 'Start Cleaning' },
+    { type: #FOR_ACTION, dataAction: 'finishCleaning', label: 'Finish Cleaning' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'startCleaning', label: 'Start Cleaning' },
+    { type: #FOR_ACTION, dataAction: 'finishCleaning', label: 'Finish Cleaning' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  Tank;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  Description;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Plant;
+
+  @UI.hidden: true
+  PlantName;
+
+  @UI.hidden: true
+  CapacityUnit;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  Capacity;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

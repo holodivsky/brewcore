@@ -1,0 +1,53 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Recipe Version',
+  typeNamePlural: 'Versions',
+  title: { type: #STANDARD, value: 'Version' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Version', direction: #DESC }] }]
+annotate entity ZVHB_C_RecipeVersion with
+{
+  @UI.facet: [
+    { id: 'Version',     purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Brewing Targets', position: 10 },
+    { id: 'Components',  purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Components per Brew', position: 20, targetElement: '_Component' }
+  ]
+  @UI.hidden: true
+  RecipeUUID;
+
+  @UI.hidden: true
+  VersionUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Version;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  IsActive;
+
+  @UI.hidden: true
+  YieldUnit;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  YieldQuantity;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  TargetGravity;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  TargetAlcohol;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 60 }]
+  FermentationDays;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  @UI.identification: [{ position: 70 }]
+  MaturationDays;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

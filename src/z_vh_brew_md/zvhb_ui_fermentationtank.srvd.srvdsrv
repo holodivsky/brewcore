@@ -1,0 +1,8 @@
+@EndUserText.label: 'BrewCore: Fermentation tank UI service'
+define service ZVHB_UI_FERMENTATIONTANK
+{
+  expose ZVHB_C_FermentationTank as FermentationTanks;
+
+  expose ZVHB_I_PlantVH          as Plants;
+  expose ZVHB_I_TankStatusVH     as TankStatuses;
+}

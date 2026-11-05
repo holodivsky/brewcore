@@ -1,0 +1,43 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Recipe',
+  typeNamePlural: 'Recipes',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'Material' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Material', direction: #ASC }] }]
+annotate entity ZVHB_C_Recipe with
+{
+  @UI.facet: [
+    { id: 'General',  purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Versions', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Versions', position: 20, targetElement: '_Version' },
+    { id: 'Admin',    purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  RecipeUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  @UI.selectionField: [{ position: 10 }]
+  Material;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  MaterialName;
+
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

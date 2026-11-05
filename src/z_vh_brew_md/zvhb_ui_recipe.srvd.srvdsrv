@@ -1,0 +1,9 @@
+@EndUserText.label: 'BrewCore: Recipe UI service'
+define service ZVHB_UI_RECIPE
+{
+  expose ZVHB_C_Recipe          as Recipes;
+  expose ZVHB_C_RecipeVersion   as RecipeVersions;
+  expose ZVHB_C_RecipeComponent as RecipeComponents;
+
+  expose ZVHB_I_MaterialVH      as Materials;
+}

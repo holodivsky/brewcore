@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Component',
+  typeNamePlural: 'Components',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'Material' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Material', direction: #ASC }] }]
+annotate entity ZVHB_C_RecipeComponent with
+{
+  @UI.facet: [{ id: 'Component', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Component', position: 10 }]
+
+  @UI.hidden: true
+  RecipeUUID;
+
+  @UI.hidden: true
+  VersionUUID;
+
+  @UI.hidden: true
+  ComponentUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  Quantity;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

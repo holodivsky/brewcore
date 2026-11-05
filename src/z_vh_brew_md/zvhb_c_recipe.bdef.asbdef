@@ -1,0 +1,37 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZVHB_C_Recipe alias Recipe
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Version { create; with draft; }
+}
+
+define behavior for ZVHB_C_RecipeVersion alias Version
+{
+  use update;
+  use delete;
+
+  use association _Recipe { with draft; }
+  use association _Component { create; with draft; }
+}
+
+define behavior for ZVHB_C_RecipeComponent alias Component
+{
+  use update;
+  use delete;
+
+  use association _Recipe { with draft; }
+  use association _Version { with draft; }
+}

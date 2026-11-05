@@ -1,0 +1,55 @@
+managed implementation in class zbp_vhb_r_fermentationtank unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_FermentationTank alias Tank
+persistent table zvhb_ftank
+draft table zvhb_ftank_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete ( features : instance );
+
+  field ( readonly ) Status, CapacityUnit, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Tank;
+  field ( mandatory ) Plant, Capacity;
+
+  action ( features : instance ) startCleaning result [1] $self;
+  action ( features : instance ) finishCleaning result [1] $self;
+
+  determination setDefaults on modify { create; }
+
+  validation validateTankNumber on save { create; }
+  validation validatePlant on save { create; field Plant; }
+  validation validateCapacity on save { create; field Capacity; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateTankNumber;
+    validation validatePlant;
+    validation validateCapacity;
+  }
+
+  mapping for zvhb_ftank
+  {
+    Tank               = tank;
+    Plant              = plant;
+    Description        = description;
+    CapacityUnit       = capacity_unit;
+    Capacity           = capacity;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
