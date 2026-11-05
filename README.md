@@ -54,7 +54,7 @@ RAP (managed, unmanaged save, unmanaged), CDS view entities, Fiori Elements, SAP
 1. Get an SAP BTP ABAP Environment (the trial works).
 2. Create package `Z_VH_BREW` and pull this repository with abapGit.
 3. Run `ZCL_VHB_SETUP_NUMBER_RANGES` with F9 in ADT to create the number range intervals.
-4. Run the demo data generator (available from stage v0.4).
+4. Run `ZCL_VHB_DEMO_DATA` with F9 to create the demo master data.
 5. Open the Fiori Elements preview from the service bindings.
 
 ## Stages
@@ -65,7 +65,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 |---|---|---|
 | [v0.1](https://github.com/holodivsky/brewcore/releases/tag/v0.1) | Foundation: packages, DDIC basics, number ranges, application log, CI | released |
 | [v0.2](https://github.com/holodivsky/brewcore/releases/tag/v0.2) | Master data: materials, business partners, price conditions | released |
-| v0.3 | Recipes and fermentation tanks | planned |
+| [v0.3](https://github.com/holodivsky/brewcore/releases/tag/v0.3) | Recipes and fermentation tanks | released |
 | v0.4 | Inventory and batches | planned |
 | v0.5 | Procurement | planned |
 | v0.6 | Invoice verification and supplier rating | planned |

@@ -73,7 +73,8 @@
     "use_new": true,
     "keyword_case": {
       "exclude": [
-        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
+        "zcl_vhb_demo_data\\.clas\\.abap$"
       ]
     },
     "exporting": true,
