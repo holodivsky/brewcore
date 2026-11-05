@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Business partner UI service'
+define service ZVHB_UI_BUSINESSPARTNER
+{
+  expose ZVHB_C_BusinessPartner     as BusinessPartners;
+  expose ZVHB_C_BusinessPartnerRole as BusinessPartnerRoles;
+
+  expose I_Country                  as Countries;
+  expose I_Currency                 as Currencies;
+  expose ZVHB_I_PaymentTermsVH      as PaymentTerms;
+  expose ZVHB_I_PartnerRoleVH       as PartnerRoles;
+}

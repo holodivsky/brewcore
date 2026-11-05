@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Price condition UI service'
+define service ZVHB_UI_PRICECONDITION
+{
+  expose ZVHB_C_PriceCondition      as PriceConditions;
+  expose ZVHB_C_PriceConditionScale as PriceConditionScales;
+
+  expose ZVHB_I_MaterialVH          as Materials;
+  expose ZVHB_I_DistrChannelVH      as DistributionChannels;
+  expose I_Currency                 as Currencies;
+  expose ZVHB_I_ConditionTypeVH     as ConditionTypes;
+}

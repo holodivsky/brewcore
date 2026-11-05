@@ -1,0 +1,150 @@
+managed implementation in class zbp_vhb_r_material unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_Material alias Material
+persistent table zvhb_mat
+draft table zvhb_mat_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _Text { create ( features : instance ); with draft; }
+  association _Unit { create ( features : instance ); with draft; }
+  association _Plant { create ( features : instance ); with draft; }
+
+  field ( readonly ) IsActive, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Material, BaseUnit;
+  field ( mandatory ) MaterialType;
+  field ( features : instance ) ShelfLifeDays;
+
+  action ( features : instance ) reactivate result [1] $self;
+  action ( features : instance ) deactivate result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination setBatchManagement on modify { field MaterialType; }
+
+  validation validateMaterialNumber on save { create; }
+  validation validateMaterialType on save { create; field MaterialType; }
+  validation validateBaseUnit on save { create; }
+  validation validateBatchManagement on save { create; field MaterialType, IsBatchManaged, ShelfLifeDays; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateMaterialNumber;
+    validation validateMaterialType;
+    validation validateBaseUnit;
+    validation validateBatchManagement;
+    validation Unit~validateConversion;
+    validation Plant~validatePlant;
+    validation Plant~validateStockLevels;
+  }
+
+  side effects
+  {
+    field MaterialType affects field IsBatchManaged, permissions ( field ShelfLifeDays );
+    field IsBatchManaged affects permissions ( field ShelfLifeDays );
+  }
+
+  mapping for zvhb_mat
+  {
+    Material           = material;
+    MaterialType       = material_type;
+    BaseUnit           = base_unit;
+    ShelfLifeDays      = shelf_life_days;
+    IsBatchManaged     = is_batch_managed;
+    IsActive           = is_active;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_MaterialText alias Text
+persistent table zvhb_mattxt
+draft table zvhb_mattxt_d
+lock dependent by _Material
+authorization dependent by _Material
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) Material, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Language;
+  field ( mandatory ) Description;
+  association _Material { with draft; }
+
+  mapping for zvhb_mattxt
+  {
+    Material           = material;
+    Language           = language;
+    Description        = description;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_MaterialUnit alias Unit
+persistent table zvhb_matuom
+draft table zvhb_matuom_d
+lock dependent by _Material
+authorization dependent by _Material
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) Material, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) AltUnit;
+  field ( mandatory ) Numerator, Denominator;
+  association _Material { with draft; }
+
+  validation validateConversion on save { create; field Numerator, Denominator; }
+
+  mapping for zvhb_matuom
+  {
+    Material           = material;
+    AltUnit            = alt_unit;
+    Numerator          = numerator;
+    Denominator        = denominator;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_MaterialPlant alias Plant
+persistent table zvhb_matplnt
+draft table zvhb_matplnt_d
+lock dependent by _Material
+authorization dependent by _Material
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) Material, BaseUnit, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) Plant;
+  association _Material { with draft; }
+
+  determination setBaseUnit on modify { create; }
+
+  validation validatePlant on save { create; }
+  validation validateStockLevels on save { create; field MinStock, ReorderPoint; }
+
+  mapping for zvhb_matplnt
+  {
+    Material           = material;
+    Plant              = plant;
+    BaseUnit           = base_unit;
+    MinStock           = min_stock;
+    ReorderPoint       = reorder_point;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

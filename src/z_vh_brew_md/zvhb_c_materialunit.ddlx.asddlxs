@@ -1,0 +1,28 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Alternative Unit',
+  typeNamePlural: 'Alternative Units',
+  title: { type: #STANDARD, value: 'AltUnit' }
+}
+annotate entity ZVHB_C_MaterialUnit with
+{
+  @UI.facet: [{ id: 'Unit', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Conversion', position: 10 }]
+
+  @UI.hidden: true
+  Material;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  AltUnit;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  Denominator;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  Numerator;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

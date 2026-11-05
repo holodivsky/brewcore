@@ -1,0 +1,36 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Plant',
+  typeNamePlural: 'Plants',
+  title: { type: #STANDARD, value: 'Plant' },
+  description: { type: #STANDARD, value: 'PlantName' }
+}
+annotate entity ZVHB_C_MaterialPlant with
+{
+  @UI.facet: [{ id: 'Plant', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Stock Planning', position: 10 }]
+
+  @UI.hidden: true
+  Material;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  @UI.textArrangement: #TEXT_LAST
+  Plant;
+
+  @UI.hidden: true
+  PlantName;
+
+  @UI.hidden: true
+  BaseUnit;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  MinStock;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  ReorderPoint;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

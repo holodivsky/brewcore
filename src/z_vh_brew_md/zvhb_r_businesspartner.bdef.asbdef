@@ -1,0 +1,93 @@
+managed implementation in class zbp_vhb_r_businesspartner unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_BusinessPartner alias Partner
+persistent table zvhb_bp
+draft table zvhb_bp_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Role { create; with draft; }
+
+  field ( numbering : managed, readonly ) PartnerUUID;
+  field ( readonly ) Partner, IsBlocked, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) PartnerName, Country, Currency, PaymentTerms;
+
+  action ( features : instance ) block result [1] $self;
+  action ( features : instance ) unblock result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination setPartnerNumber on save { create; }
+
+  validation validateName on save { create; field PartnerName; }
+  validation validateCountry on save { create; field Country; }
+  validation validateCurrency on save { create; field Currency; }
+  validation validatePaymentTerms on save { create; field PaymentTerms; }
+  validation validateCreditLimit on save { create; field CreditLimit; }
+  validation validateRoles on save { create; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateName;
+    validation validateCountry;
+    validation validateCurrency;
+    validation validatePaymentTerms;
+    validation validateCreditLimit;
+    validation validateRoles;
+    validation Role~validateRole;
+  }
+
+  mapping for zvhb_bp
+  {
+    PartnerUUID        = partner_uuid;
+    Partner            = partner;
+    PartnerName        = partner_name;
+    Street             = street;
+    PostalCode         = postal_code;
+    City               = city;
+    Country            = country;
+    Currency           = currency;
+    PaymentTerms       = payment_terms;
+    CreditLimit        = credit_limit;
+    IsBlocked          = is_blocked;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_BusinessPartnerRole alias Role
+persistent table zvhb_bprole
+draft table zvhb_bprole_d
+lock dependent by _Partner
+authorization dependent by _Partner
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( readonly ) PartnerUUID, LocalLastChangedAt;
+  field ( mandatory : create, readonly : update ) PartnerRole;
+  association _Partner { with draft; }
+
+  validation validateRole on save { create; }
+
+  mapping for zvhb_bprole
+  {
+    PartnerUUID        = partner_uuid;
+    PartnerRole        = partner_role;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

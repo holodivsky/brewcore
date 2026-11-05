@@ -1,0 +1,13 @@
+@EndUserText.label: 'BrewCore: Material UI service'
+define service ZVHB_UI_MATERIAL
+{
+  expose ZVHB_C_Material       as Materials;
+  expose ZVHB_C_MaterialText   as MaterialTexts;
+  expose ZVHB_C_MaterialUnit   as MaterialUnits;
+  expose ZVHB_C_MaterialPlant  as MaterialPlants;
+
+  expose ZVHB_I_MaterialTypeVH as MaterialTypes;
+  expose ZVHB_I_PlantVH        as Plants;
+  expose I_UnitOfMeasureStdVH  as UnitsOfMeasure;
+  expose I_Language            as Languages;
+}

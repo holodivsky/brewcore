@@ -1,0 +1,48 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZVHB_C_Material alias Material
+{
+  use create;
+  use update;
+  use delete;
+
+  use action reactivate;
+  use action deactivate;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Text { create; with draft; }
+  use association _Unit { create; with draft; }
+  use association _Plant { create; with draft; }
+}
+
+define behavior for ZVHB_C_MaterialPlant alias Plant
+{
+  use update;
+  use delete;
+
+  use association _Material { with draft; }
+}
+
+define behavior for ZVHB_C_MaterialText alias Text
+{
+  use update;
+  use delete;
+
+  use association _Material { with draft; }
+}
+
+define behavior for ZVHB_C_MaterialUnit alias Unit
+{
+  use update;
+  use delete;
+
+  use association _Material { with draft; }
+}

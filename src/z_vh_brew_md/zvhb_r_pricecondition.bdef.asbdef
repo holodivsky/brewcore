@@ -1,0 +1,102 @@
+managed implementation in class zbp_vhb_r_pricecondition unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_PriceCondition alias Price
+persistent table zvhb_price
+draft table zvhb_price_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Scale { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) PriceUUID;
+  field ( readonly ) BaseUnit, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) ConditionType, Material, ValidFrom, ValidTo, Amount, Currency;
+  field ( features : instance ) DistributionChannel;
+
+  determination setDefaults on modify { create; }
+  determination setBaseUnit on modify { field Material; }
+  determination clearDepositChannel on modify { field ConditionType; }
+
+  validation validateConditionType on save { create; field ConditionType; }
+  validation validateMaterial on save { create; field ConditionType, Material; }
+  validation validateChannel on save { create; field ConditionType, DistributionChannel; }
+  validation validateValidity on save { create; field ValidFrom, ValidTo; }
+  validation validateAmount on save { create; field Amount, Currency; }
+  validation validateOverlap on save { create; field ConditionType, Material, DistributionChannel, ValidFrom, ValidTo; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateConditionType;
+    validation validateMaterial;
+    validation validateChannel;
+    validation validateValidity;
+    validation validateAmount;
+    validation validateOverlap;
+    validation Scale~validateScale;
+  }
+
+  side effects
+  {
+    field ConditionType affects field DistributionChannel, permissions ( field DistributionChannel );
+    field Material affects field BaseUnit;
+  }
+
+  mapping for zvhb_price
+  {
+    PriceUUID           = price_uuid;
+    ConditionType       = condition_type;
+    Material            = material;
+    DistributionChannel = distr_channel;
+    ValidFrom           = valid_from;
+    ValidTo             = valid_to;
+    Amount              = amount;
+    Currency            = currency;
+    BaseUnit            = base_unit;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_PriceConditionScale alias Scale
+persistent table zvhb_prcscale
+draft table zvhb_prcscale_d
+lock dependent by _Price
+authorization dependent by _Price
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+  field ( numbering : managed, readonly ) ScaleUUID;
+  field ( readonly ) PriceUUID, BaseUnit, LocalLastChangedAt;
+  field ( mandatory ) FromQuantity, DiscountPercent;
+  association _Price { with draft; }
+
+  determination setBaseUnit on modify { create; }
+
+  validation validateScale on save { create; field FromQuantity, DiscountPercent; }
+
+  mapping for zvhb_prcscale
+  {
+    PriceUUID          = price_uuid;
+    ScaleUUID          = scale_uuid;
+    BaseUnit           = base_unit;
+    FromQuantity       = from_quantity;
+    DiscountPercent    = discount_percent;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

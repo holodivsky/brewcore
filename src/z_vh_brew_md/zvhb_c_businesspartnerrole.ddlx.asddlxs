@@ -1,0 +1,24 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Role',
+  typeNamePlural: 'Roles',
+  title: { type: #STANDARD, value: 'PartnerRole' }
+}
+annotate entity ZVHB_C_BusinessPartnerRole with
+{
+  @UI.facet: [{ id: 'Role', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Role', position: 10 }]
+
+  @UI.hidden: true
+  PartnerUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  @UI.textArrangement: #TEXT_FIRST
+  PartnerRole;
+
+  @UI.hidden: true
+  PartnerRoleName;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

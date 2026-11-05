@@ -1,0 +1,29 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZVHB_C_BusinessPartner alias Partner
+{
+  use create;
+  use update;
+  use delete;
+
+  use action block;
+  use action unblock;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Role { create; with draft; }
+}
+
+define behavior for ZVHB_C_BusinessPartnerRole alias Role
+{
+  use update;
+  use delete;
+
+  use association _Partner { with draft; }
+}

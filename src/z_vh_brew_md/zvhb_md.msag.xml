@@ -6,6 +6,194 @@
     <ARBGB>ZVHB_MD</ARBGB>
     <STEXT>BrewCore: Master data messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Material number &amp;1 may contain only A-Z, 0-9 and hyphens</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Material type &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Unit of measure &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Materials of type &amp;1 must be batch-managed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Batch-managed material &amp;1 needs a shelf life in days</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Conversion factors for unit &amp;1 must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Alternative unit &amp;1 must differ from the base unit</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Plant &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Minimum stock must not exceed the reorder point in plant &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Stock levels in plant &amp;1 must not be negative</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Base unit of material &amp;1 is required</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Partner name is required</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Country/region &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Currency &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Payment terms &amp;1 are not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Credit limit must not be negative</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Partner role &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Partner &amp;1 needs at least one role</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>No partner number assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Condition type &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Material &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Material &amp;1 is inactive</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Distribution channel &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>Deposit applies only to returnable empties, not to &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>025</MSGNR>
+     <TEXT>Valid-to date must not be before valid-from date</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>026</MSGNR>
+     <TEXT>Amount must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>027</MSGNR>
+     <TEXT>Validity overlaps with another &amp;1 condition for &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>028</MSGNR>
+     <TEXT>Scale quantity must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>029</MSGNR>
+     <TEXT>Discount must be between 0 and 100 percent</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>030</MSGNR>
+     <TEXT>Base price for material &amp;1 needs a distribution channel</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>031</MSGNR>
+     <TEXT>Currency is required</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

@@ -1,0 +1,91 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Business Partner',
+  typeNamePlural: 'Business Partners',
+  title: { type: #STANDARD, value: 'PartnerName' },
+  description: { type: #STANDARD, value: 'Partner' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Partner', direction: #ASC }] }]
+annotate entity ZVHB_C_BusinessPartner with
+{
+  @UI.facet: [
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Address', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Address', position: 20, targetQualifier: 'Address' },
+    { id: 'Roles',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Roles', position: 30, targetElement: '_Role' },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 40, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  PartnerUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'block', label: 'Block' },
+    { type: #FOR_ACTION, dataAction: 'unblock', label: 'Unblock' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'block', label: 'Block' },
+    { type: #FOR_ACTION, dataAction: 'unblock', label: 'Unblock' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  Partner;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  PartnerName;
+
+  @UI.fieldGroup: [{ qualifier: 'Address', position: 10 }]
+  Street;
+
+  @UI.fieldGroup: [{ qualifier: 'Address', position: 20 }]
+  PostalCode;
+
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Address', position: 30 }]
+  @UI.selectionField: [{ position: 20 }]
+  City;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Address', position: 40 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Country;
+
+  @UI.hidden: true
+  CountryName;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 30 }]
+  Currency;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_FIRST
+  PaymentTerms;
+
+  @UI.hidden: true
+  PaymentTermsName;
+
+  @UI.identification: [{ position: 50 }]
+  CreditLimit;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  @UI.identification: [{ position: 60 }]
+  @UI.selectionField: [{ position: 40 }]
+  IsBlocked;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}
