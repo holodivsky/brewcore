@@ -17,4 +17,5 @@ Classic ABAP creates a domain for almost every data element. In ABAP Cloud a dat
 
 - Fewer repository objects, and each domain carries real meaning.
 - Value helps for fixed-value domains come from the domain itself.
-- Material numbers are entered as readable IDs such as `PILS-BTL05`. Without a domain there is no automatic upper-case conversion, so a validation in the material business object has to normalise the input.
+- Material numbers are entered as readable IDs such as `PILS-BTL05`. Without a domain there is no automatic upper-case conversion. The material number is the key and cannot be changed after creation, so the validation `validateMaterialNumber` rejects anything other than A-Z, 0-9 and hyphens instead of converting it.
+- Fixed values are checked with `ZCL_VHB_FIXED_VALUES`, which reads the domain values independent of the logon language. The value help views show texts in the logon language only.

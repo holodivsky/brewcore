@@ -41,7 +41,7 @@ Z_VH_BREW            superpackage, overview class ZCL_VHB_README
 
 - Modules talk to each other only through EML and RAP business events and never write into another module's tables.
 - Stock is never stored. It is a CDS aggregation over material documents, as in S/4HANA (MATDOC).
-- Document numbers come from number ranges with late numbering, assigned on save, not when the draft is created.
+- Document numbers come from number ranges and are assigned on save, not when the draft is created.
 
 Design decisions are recorded in [docs/adr](docs/adr).
 
@@ -64,7 +64,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 | Tag | Stage | Status |
 |---|---|---|
 | [v0.1](https://github.com/holodivsky/brewcore/releases/tag/v0.1) | Foundation: packages, DDIC basics, number ranges, application log, CI | released |
-| v0.2 | Master data | planned |
+| [v0.2](https://github.com/holodivsky/brewcore/releases/tag/v0.2) | Master data: materials, business partners, price conditions | released |
 | v0.3 | Recipes and fermentation tanks | planned |
 | v0.4 | Inventory and batches | planned |
 | v0.5 | Procurement | planned |
