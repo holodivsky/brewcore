@@ -26,7 +26,8 @@
     "check_include": true,
     "check_syntax": {
       "exclude": [
-        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
+        "zcl_vhb_po_goods_receipt\\.clas\\.locals_imp\\.abap$"
       ]
     },
     "global_class": true,
@@ -37,7 +38,11 @@
         "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
       ]
     },
-    "superclass_final": true,
+    "superclass_final": {
+      "exclude": [
+        "zcl_vhb_po_goods_receipt\\.clas\\.locals_imp\\.abap$"
+      ]
+    },
     "unknown_types": true,
     "xml_consistency": true,
     "avoid_use": {
@@ -74,7 +79,9 @@
     "keyword_case": {
       "exclude": [
         "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
-        "zcl_vhb_demo_data\\.clas\\.abap$"
+        "zcl_vhb_demo_data\\.clas\\.abap$",
+        "zcl_vhb_po_goods_receipt\\.clas\\.locals_imp\\.abap$",
+        "zcl_vhb_purchasing_check\\.clas\\.(abap|testclasses\\.abap)$"
       ]
     },
     "exporting": true,

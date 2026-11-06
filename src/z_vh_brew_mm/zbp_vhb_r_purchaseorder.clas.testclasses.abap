@@ -262,7 +262,9 @@ CLASS ltc_purchase_order IMPLEMENTATION.
   METHOD missing_supplier_fails.
     DATA(mapped) = create_order( supplier = '' ).
 
-    order_handler->validatesupplier( EXPORTING keys = CORRESPONDING #( mapped-purchaseorder ) CHANGING failed = failed reported = reported ).
+    order_handler->validatesupplier( EXPORTING keys     = CORRESPONDING #( mapped-purchaseorder )
+                                     CHANGING  failed   = failed
+                                               reported = reported ).
 
     assert_error( '008' ).
   ENDMETHOD.
