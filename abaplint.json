@@ -81,7 +81,7 @@
         "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
         "zcl_vhb_demo_data\\.clas\\.abap$",
         "zcl_vhb_po_goods_receipt\\.clas\\.locals_imp\\.abap$",
-        "zcl_vhb_purchasing_check\\.clas\\.(abap|testclasses\\.abap)$"
+        "zcl_vhb_(purchasing_check|invoice_item_match)\\.clas\\.(abap|testclasses\\.abap)$"
       ]
     },
     "exporting": true,

@@ -331,7 +331,7 @@ CLASS lhc_invoice IMPLEMENTATION.
         INNER JOIN zvhb_r_purchaseorder AS header
           ON header~PurchaseOrderUUID = item~PurchaseOrderUUID
         LEFT OUTER JOIN zvhb_i_purchaseorderhistory AS history
-          ON  history~PurchaseOrder     = header~PurchaseOrder
+          ON history~PurchaseOrder      = header~PurchaseOrder
           AND history~PurchaseOrderItem = item~Item
         LEFT OUTER JOIN zvhb_i_invoicedquantity AS invoiced
           ON invoiced~OrderItemUUID = item~ItemUUID

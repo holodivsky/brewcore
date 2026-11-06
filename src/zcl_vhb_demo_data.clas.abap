@@ -741,7 +741,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
         INNER JOIN zvhb_pohdr AS header
           ON header~po_uuid = item~po_uuid
         LEFT OUTER JOIN zvhb_i_purchaseorderhistory AS history
-          ON  history~PurchaseOrder     = header~purchase_order
+          ON history~PurchaseOrder      = header~purchase_order
           AND history~PurchaseOrderItem = item~item
       WHERE item~po_uuid = @order-po_uuid
       INTO @DATA(item).
