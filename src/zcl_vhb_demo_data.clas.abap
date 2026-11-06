@@ -82,6 +82,34 @@ CLASS zcl_vhb_demo_data DEFINITION
         malt_supplier TYPE zvhb_partner
         hops_supplier TYPE zvhb_partner.
 
+    TYPES:
+      BEGIN OF ty_order,
+        po_uuid        TYPE sysuuid_x16,
+        purchase_order TYPE zvhb_purch_order,
+        status         TYPE zvhb_po_status,
+      END OF ty_order.
+
+    "! Receives the goods of both orders and enters two supplier invoices: the hops invoice matches
+    "! and is posted, the malt invoice charges a higher price and is blocked by the 3-way match
+    METHODS create_supplier_invoices
+      IMPORTING
+        malt_supplier TYPE zvhb_partner
+        hops_supplier TYPE zvhb_partner.
+
+    METHODS find_order
+      IMPORTING
+        supplier      TYPE zvhb_partner
+      RETURNING
+        VALUE(result) TYPE ty_order.
+
+    "! Approves the order if needed and posts the goods receipt unless goods were already received
+    METHODS receive_goods
+      IMPORTING
+        order         TYPE ty_order
+        quantity      TYPE zvhb_quantity
+      RETURNING
+        VALUE(result) TYPE abap_boolean.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -514,6 +542,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
 
     create_requisitions( malt_supplier ).
     create_purchase_orders( malt_supplier = malt_supplier hops_supplier = hops_supplier ).
+    create_supplier_invoices( malt_supplier = malt_supplier hops_supplier = hops_supplier ).
   ENDMETHOD.
 
   METHOD create_requisitions.
@@ -608,6 +637,148 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     ENDIF.
 
     out->write( |Purchase orders created: hops (ordered) and malt (awaiting approval)| ).
+  ENDMETHOD.
+
+  METHOD create_supplier_invoices.
+    SELECT SINGLE @abap_true FROM zvhb_sinvhdr INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Supplier invoices exist, skipped| ).
+      RETURN.
+    ENDIF.
+
+    DATA(malt_order) = find_order( malt_supplier ).
+    DATA(hops_order) = find_order( hops_supplier ).
+    IF malt_order IS INITIAL OR hops_order IS INITIAL.
+      out->write( |Purchase orders missing, supplier invoices skipped| ).
+      RETURN.
+    ENDIF.
+
+    IF receive_goods( order = hops_order quantity = 50 ) = abap_false
+       OR receive_goods( order = malt_order quantity = 10000 ) = abap_false.
+      RETURN.
+    ENDIF.
+
+    " The items are proposed from the received quantities at the order price
+    MODIFY ENTITIES OF zvhb_r_supplierinvoice
+      ENTITY Invoice
+        CREATE FIELDS ( PurchaseOrder InvoiceReference )
+        WITH VALUE #( ( %cid = 'HOPS' PurchaseOrder = hops_order-purchase_order InvoiceReference = 'HH-2026-0815' )
+                      ( %cid = 'MALT' PurchaseOrder = malt_order-purchase_order InvoiceReference = 'MW-2026-1107' ) )
+      MAPPED DATA(mapped)
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS INITIAL.
+      " The maltings charges 0.50 EUR per kg instead of the agreed 0.48
+      READ ENTITIES OF zvhb_r_supplierinvoice
+        ENTITY Invoice BY \_Item
+          FIELDS ( NetPrice ) WITH VALUE #( FOR m IN mapped-invoice WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
+        RESULT DATA(malt_items).
+
+      MODIFY ENTITIES OF zvhb_r_supplierinvoice
+        ENTITY Item
+          UPDATE FIELDS ( NetPrice )
+          WITH VALUE #( FOR i IN malt_items ( %tky = i-%tky NetPrice = '0.50' ) )
+        FAILED failed
+        REPORTED reported.
+    ENDIF.
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_supplierinvoice
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Supplier invoices not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    " Posting runs the 3-way match on the saved invoices
+    MODIFY ENTITIES OF zvhb_r_supplierinvoice
+      ENTITY Invoice
+        EXECUTE post FROM VALUE #( FOR m IN mapped-invoice ( %tky = m-%tky ) )
+      FAILED failed
+      REPORTED reported.
+
+    write_messages( reported ).
+    COMMIT ENTITIES RESPONSE OF zvhb_r_supplierinvoice
+      FAILED commit_failed
+      REPORTED commit_reported.
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Supplier invoices not posted:| ).
+      write_messages( commit_reported ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD find_order.
+    SELECT po_uuid, purchase_order, status FROM zvhb_pohdr
+      WHERE supplier = @supplier
+        AND status <> 'REJ'
+      ORDER BY purchase_order
+      INTO @result
+      UP TO 1 ROWS.
+    ENDSELECT.
+  ENDMETHOD.
+
+  METHOD receive_goods.
+    IF order-status = 'WAIT'.
+      MODIFY ENTITIES OF zvhb_r_purchaseorder
+        ENTITY PurchaseOrder
+          EXECUTE approve FROM VALUE #( ( PurchaseOrderUUID = order-po_uuid ) )
+        FAILED DATA(failed)
+        REPORTED DATA(reported).
+    ENDIF.
+
+    SELECT SINGLE item~item_uuid, history~ReceivedQuantity
+      FROM zvhb_poitm AS item
+        INNER JOIN zvhb_pohdr AS header
+          ON header~po_uuid = item~po_uuid
+        LEFT OUTER JOIN zvhb_i_purchaseorderhistory AS history
+          ON  history~PurchaseOrder     = header~purchase_order
+          AND history~PurchaseOrderItem = item~item
+      WHERE item~po_uuid = @order-po_uuid
+      INTO @DATA(item).
+
+    IF failed IS INITIAL AND item-receivedquantity IS INITIAL.
+      MODIFY ENTITIES OF zvhb_r_purchaseorder
+        ENTITY Item
+          EXECUTE receiveGoods
+          FROM VALUE #( ( PurchaseOrderUUID = order-po_uuid
+                          ItemUUID          = item-item_uuid
+                          %param            = VALUE #( Quantity       = quantity
+                                                       ProductionDate = cl_abap_context_info=>get_system_date( ) ) ) )
+        FAILED failed
+        REPORTED reported.
+    ENDIF.
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    " Saves the material document as well; the order learns about it from the event
+    COMMIT ENTITIES RESPONSE OF zvhb_r_purchaseorder
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Goods receipt for { order-purchase_order } not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    out->write( COND #( WHEN item-receivedquantity IS INITIAL
+                        THEN |Goods of purchase order { order-purchase_order } received|
+                        ELSE |Goods of purchase order { order-purchase_order } already received, skipped| ) ).
+    result = abap_true.
   ENDMETHOD.
 
   METHOD write_messages.

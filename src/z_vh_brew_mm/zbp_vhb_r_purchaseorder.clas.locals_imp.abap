@@ -678,8 +678,12 @@ CLASS lhc_item IMPLEMENTATION.
 
       APPEND VALUE #( %tky            = item-%tky
                       Item            = number
-                      Currency        = VALUE #( orders[ KEY entity COMPONENTS PurchaseOrderUUID = item-PurchaseOrderUUID ]-Currency
-                                                 OPTIONAL )
+                      " Header and items can be created in one request, before the header has its currency
+                      Currency        = COND #( LET currency = VALUE #( orders[ KEY entity COMPONENTS
+                                                                         PurchaseOrderUUID = item-PurchaseOrderUUID ]-Currency
+                                                                         OPTIONAL ) IN
+                                                WHEN currency IS INITIAL THEN lif_purchase_order=>c_currency
+                                                ELSE currency )
                       Plant           = COND #( WHEN item-Plant IS INITIAL THEN defaults-plant ELSE item-Plant )
                       StorageLocation = COND #( WHEN item-StorageLocation IS INITIAL
                                                 THEN defaults-storage_location ELSE item-StorageLocation )

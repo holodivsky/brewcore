@@ -1,0 +1,5 @@
+@EndUserText.label: 'BrewCore: Supplier score UI service'
+define service ZVHB_UI_SUPPLIERSCORE
+{
+  expose ZVHB_C_SupplierScore as SupplierScores;
+}

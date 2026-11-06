@@ -1,0 +1,116 @@
+managed implementation in class zbp_vhb_r_supplierinvoice unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_SupplierInvoice alias Invoice
+persistent table zvhb_sinvhdr
+draft table zvhb_sinvhdr_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  // Items are proposed from the purchase order, the app does not create them by hand
+  association _Item { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) InvoiceUUID;
+  field ( readonly ) SupplierInvoice, Supplier, Currency, TotalAmount, Status, StatusCriticality,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) PurchaseOrder, InvoiceReference, InvoiceDate;
+
+  action ( features : instance ) post result [1] $self;
+  action ( features : instance ) release result [1] $self;
+  action ( features : instance ) reject result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination proposeItems on modify { create; field PurchaseOrder; }
+  determination setNumber on save { create; }
+
+  validation validateOrder on save { create; field PurchaseOrder; }
+  validation validateReference on save { create; field InvoiceReference, InvoiceDate; }
+  validation validateItems on save { create; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateOrder;
+    validation validateReference;
+    validation validateItems;
+    validation Item~validateItem;
+  }
+
+  side effects
+  {
+    field PurchaseOrder affects field Supplier, field Currency, field TotalAmount, entity _Item;
+  }
+
+  mapping for zvhb_sinvhdr
+  {
+    InvoiceUUID        = invoice_uuid;
+    SupplierInvoice    = supplier_invoice;
+    PurchaseOrder      = purchase_order;
+    Supplier           = supplier;
+    InvoiceReference   = invoice_reference;
+    InvoiceDate        = invoice_date;
+    Currency           = currency;
+    TotalAmount        = total_amount;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_SupplierInvoiceItem alias Item
+persistent table zvhb_sinvitm
+draft table zvhb_sinvitm_d
+lock dependent by _Invoice
+authorization dependent by _Invoice
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _Invoice { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) InvoiceUUID, Item, OrderItemUUID, PurchaseOrder, PurchaseOrderItem, Material, Unit, NetAmount,
+                     LocalLastChangedAt;
+  field ( mandatory ) Quantity, NetPrice, Currency;
+
+  determination calculateAmount on modify { create; field Quantity, NetPrice; }
+
+  validation validateItem on save { create; field Quantity, NetPrice, Currency; }
+
+  side effects
+  {
+    field Quantity affects field NetAmount, field _Invoice.TotalAmount;
+    field NetPrice affects field NetAmount, field _Invoice.TotalAmount;
+  }
+
+  mapping for zvhb_sinvitm
+  {
+    InvoiceUUID        = invoice_uuid;
+    ItemUUID           = item_uuid;
+    Item               = item;
+    OrderItemUUID      = po_item_uuid;
+    PurchaseOrder      = purchase_order;
+    PurchaseOrderItem  = purchase_order_item;
+    Material           = material;
+    Unit               = unit;
+    Quantity           = quantity;
+    Currency           = currency;
+    NetPrice           = net_price;
+    NetAmount          = net_amount;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

@@ -6,6 +6,10 @@ CLASS zcl_vhb_purchasing_check DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
+    "! An invoiced price may deviate this much from the order price before the invoice is blocked.
+    "! View ZVHB_I_SupplierInvoiceMatch uses the same value.
+    CONSTANTS c_price_tolerance TYPE zvhb_percent VALUE '2.00'.
+
     TYPES:
       BEGIN OF ty_error,
         msgno TYPE symsgno,

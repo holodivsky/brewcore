@@ -7,6 +7,8 @@ define view entity ZVHB_C_MaterialText
   key Material,
 
       @Consumption.valueHelpDefinition: [{ entity: { name: 'I_Language', element: 'Language' } }]
+      @EndUserText.label: 'Language'
+      @EndUserText.quickInfo: 'Language of the description'
   key Language,
 
       Description,

@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Supplier invoice UI service'
+define service ZVHB_UI_SUPPLIERINVOICE
+{
+  expose ZVHB_C_SupplierInvoice     as SupplierInvoices;
+  expose ZVHB_C_SupplierInvoiceItem as SupplierInvoiceItems;
+
+  expose ZVHB_I_InvoiceableOrderVH  as InvoiceableOrders;
+  expose ZVHB_I_InvoiceStatusVH     as InvoiceStatuses;
+  expose ZVHB_I_SupplierVH          as Suppliers;
+  expose ZVHB_I_MaterialVH          as Materials;
+}

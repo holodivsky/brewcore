@@ -1,0 +1,32 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZVHB_C_SupplierInvoice alias Invoice
+{
+  use create;
+  use update;
+  use delete;
+
+  use action post;
+  use action release;
+  use action reject;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  // Items come from the purchase order and can only be changed or removed
+  use association _Item { with draft; }
+}
+
+define behavior for ZVHB_C_SupplierInvoiceItem alias Item
+{
+  use update;
+  use delete;
+
+  use association _Invoice { with draft; }
+}

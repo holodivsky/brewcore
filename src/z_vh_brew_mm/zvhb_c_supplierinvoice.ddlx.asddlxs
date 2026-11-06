@@ -1,0 +1,91 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Supplier Invoice',
+  typeNamePlural: 'Supplier Invoices',
+  title: { type: #STANDARD, value: 'SupplierInvoice' },
+  description: { type: #STANDARD, value: 'SupplierName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'InvoiceDate', direction: #DESC }] }]
+annotate entity ZVHB_C_SupplierInvoice with
+{
+  @UI.facet: [
+    { id: 'Status',  purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Status', position: 10 },
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Items',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_Item' },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  InvoiceUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'post', label: 'Post' },
+    { type: #FOR_ACTION, dataAction: 'release', label: 'Release for Payment' },
+    { type: #FOR_ACTION, dataAction: 'reject', label: 'Reject' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'post', label: 'Post' },
+    { type: #FOR_ACTION, dataAction: 'release', label: 'Release for Payment' },
+    { type: #FOR_ACTION, dataAction: 'reject', label: 'Reject' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  SupplierInvoice;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  PurchaseOrder;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Supplier;
+
+  @UI.hidden: true
+  SupplierName;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  InvoiceReference;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  InvoiceDate;
+
+  @UI.lineItem: [{ position: 60, importance: #HIGH }]
+  @UI.identification: [{ position: 60 }]
+  TotalAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH, criticality: 'StatusCriticality' }]
+  @UI.identification: [{ position: 70, criticality: 'StatusCriticality' }]
+  @UI.dataPoint: { qualifier: 'Status', title: 'Status', criticality: 'StatusCriticality' }
+  @UI.selectionField: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.hidden: true
+  StatusCriticality;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

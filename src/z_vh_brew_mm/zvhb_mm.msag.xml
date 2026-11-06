@@ -127,6 +127,120 @@
      <MSGNR>020</MSGNR>
      <TEXT>Purchase order &amp;1 waits for approval: total &amp;2 &amp;3 is above &amp;4</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Purchase order &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Purchase order &amp;1 is not ordered; only ordered goods can be invoiced</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Nothing to invoice for purchase order &amp;1: all received goods are invoiced</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>Enter the invoice number of the supplier</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>025</MSGNR>
+     <TEXT>Supplier &amp;1 has already sent invoice &amp;2 (document &amp;3)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>026</MSGNR>
+     <TEXT>Invoice date &amp;1 is in the future</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>027</MSGNR>
+     <TEXT>Quantity of item &amp;1 must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>028</MSGNR>
+     <TEXT>Price of item &amp;1 must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>029</MSGNR>
+     <TEXT>Currency of item &amp;1 must be &amp;2, the currency of the invoice</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>030</MSGNR>
+     <TEXT>Invoice has no items</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>031</MSGNR>
+     <TEXT>Invoice &amp;1 posted: order, goods receipt and invoice match</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>032</MSGNR>
+     <TEXT>Invoice &amp;1 blocked: price of item &amp;2 differs by &amp;3 % (tolerance &amp;4 %)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>033</MSGNR>
+     <TEXT>Invoice &amp;1 blocked: item &amp;2 invoices &amp;3 more than received</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>034</MSGNR>
+     <TEXT>Invoice &amp;1 released for payment</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>035</MSGNR>
+     <TEXT>Invoice number could not be assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>036</MSGNR>
+     <TEXT>Price differs by &amp;1 % from the order price &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>037</MSGNR>
+     <TEXT>Quantity is above the received quantity &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>038</MSGNR>
+     <TEXT>Matches order and goods receipt</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>039</MSGNR>
+     <TEXT>Invoice &amp;1 rejected</TEXT>
+    </T100>
    </T100>
    <I18N_LANGS>
     <LANGU/>

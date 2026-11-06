@@ -1,0 +1,81 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Supplier Score',
+  typeNamePlural: 'Supplier Scores',
+  title: { type: #STANDARD, value: 'SupplierName' },
+  description: { type: #STANDARD, value: 'Supplier' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Score', direction: #DESC }] }]
+annotate entity ZVHB_C_SupplierScore with
+{
+  @UI.facet: [
+    { id: 'Score',     purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Score', position: 10 },
+    { id: 'Rating',    purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Rating', position: 20 },
+    { id: 'Criteria',  purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Criteria (weight 40 / 30 / 20 / 10 %)',
+      position: 10, targetQualifier: 'Criteria' },
+    { id: 'Basis',     purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Basis', position: 20, targetQualifier: 'Basis' },
+    { id: 'Supplier',  purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Supplier', position: 30, targetQualifier: 'Supplier' }
+  ]
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.selectionField: [{ position: 10 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Supplier;
+
+  @UI.hidden: true
+  SupplierName;
+
+  @UI.lineItem: [{ position: 20, importance: #LOW }]
+  @UI.fieldGroup: [{ qualifier: 'Supplier', position: 10 }]
+  City;
+
+  @UI.fieldGroup: [{ qualifier: 'Supplier', position: 20 }]
+  Country;
+
+  @UI.fieldGroup: [{ qualifier: 'Supplier', position: 30 }]
+  IsBlocked;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH, criticality: 'ScoreCriticality', criticalityRepresentation: #WITHOUT_ICON }]
+  @UI.dataPoint: { qualifier: 'Score', title: 'Score', visualization: #PROGRESS, targetValue: 100, criticality: 'ScoreCriticality' }
+  Score;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH, criticality: 'ScoreCriticality', criticalityRepresentation: #WITH_ICON }]
+  @UI.dataPoint: { qualifier: 'Rating', title: 'Rating', criticality: 'ScoreCriticality' }
+  @UI.selectionField: [{ position: 20 }]
+  Rating;
+
+  @UI.hidden: true
+  ScoreCriticality;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Criteria', position: 10 }]
+  OnTimeScore;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Criteria', position: 20 }]
+  QuantityScore;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Criteria', position: 30 }]
+  PriceScore;
+
+  @UI.lineItem: [{ position: 80, importance: #LOW }]
+  @UI.fieldGroup: [{ qualifier: 'Criteria', position: 40 }]
+  QualityScore;
+
+  @UI.lineItem: [{ position: 90, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Basis', position: 10 }]
+  DeliveryCount;
+
+  @UI.fieldGroup: [{ qualifier: 'Basis', position: 20 }]
+  OnTimeCount;
+
+  @UI.fieldGroup: [{ qualifier: 'Basis', position: 30 }]
+  AvgQuantityDeviation;
+
+  @UI.fieldGroup: [{ qualifier: 'Basis', position: 40 }]
+  InvoiceItemCount;
+
+  @UI.lineItem: [{ position: 100, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Basis', position: 50 }]
+  AvgPriceDeviation;
+}
