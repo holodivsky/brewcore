@@ -68,7 +68,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 | [v0.3](https://github.com/holodivsky/brewcore/releases/tag/v0.3) | Recipes and fermentation tanks | released |
 | [v0.4](https://github.com/holodivsky/brewcore/releases/tag/v0.4) | Inventory and batches | released |
 | [v0.5](https://github.com/holodivsky/brewcore/releases/tag/v0.5) | Procurement | released |
-| v0.6 | Invoice verification and supplier rating | planned |
+| [v0.6](https://github.com/holodivsky/brewcore/releases/tag/v0.6) | Invoice verification and supplier rating | released |
 | v0.7 | Production | planned |
 | v0.8 | Quality | planned |
 | v0.9 | Sales | planned |
