@@ -1,0 +1,91 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Purchase Requisition',
+  typeNamePlural: 'Purchase Requisitions',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'PurchaseRequisition' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'DeliveryDate', direction: #ASC }] }]
+annotate entity ZVHB_C_PurchaseRequisition with
+{
+  @UI.facet: [
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Requisition', position: 10 },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 20, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  RequisitionUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  PurchaseRequisition;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  Quantity;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  DeliveryDate;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  Plant;
+
+  @UI.identification: [{ position: 60 }]
+  StorageLocation;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 70 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Supplier;
+
+  @UI.hidden: true
+  SupplierName;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  @UI.identification: [{ position: 80 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  @UI.identification: [{ position: 90 }]
+  PurchaseOrder;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

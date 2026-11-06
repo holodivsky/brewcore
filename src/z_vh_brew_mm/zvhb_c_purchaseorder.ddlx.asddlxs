@@ -1,0 +1,85 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Purchase Order',
+  typeNamePlural: 'Purchase Orders',
+  title: { type: #STANDARD, value: 'PurchaseOrder' },
+  description: { type: #STANDARD, value: 'SupplierName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'PurchaseOrder', direction: #DESC }] }]
+annotate entity ZVHB_C_PurchaseOrder with
+{
+  @UI.facet: [
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'General Information', position: 10 },
+    { id: 'Items',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_Item' },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  PurchaseOrderUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'createFromRequisition', label: 'Create from Requisition' },
+    { type: #FOR_ACTION, dataAction: 'order', label: 'Order' },
+    { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+    { type: #FOR_ACTION, dataAction: 'reject', label: 'Reject' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'order', label: 'Order' },
+    { type: #FOR_ACTION, dataAction: 'approve', label: 'Approve' },
+    { type: #FOR_ACTION, dataAction: 'reject', label: 'Reject' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  PurchaseOrder;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Supplier;
+
+  @UI.hidden: true
+  SupplierName;
+
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+  @UI.identification: [{ position: 30 }]
+  OrderDate;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  TotalAmount;
+
+  @UI.identification: [{ position: 50 }]
+  Currency;
+
+  @UI.identification: [{ position: 60 }]
+  @UI.textArrangement: #TEXT_FIRST
+  PaymentTerms;
+
+  @UI.hidden: true
+  PaymentTermsName;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 70 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

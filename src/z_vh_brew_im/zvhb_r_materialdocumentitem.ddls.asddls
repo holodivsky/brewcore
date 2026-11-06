@@ -41,6 +41,10 @@ define view entity ZVHB_R_MaterialDocumentItem
       @EndUserText.label: 'Reverses Item'
       reversed_item      as ReversedItem,
 
+      purchase_order     as PurchaseOrder,
+
+      purchase_order_item as PurchaseOrderItem,
+
       _MaterialDocument,
       _Material,
       _MovementType,

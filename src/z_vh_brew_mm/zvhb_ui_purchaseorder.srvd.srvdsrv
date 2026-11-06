@@ -1,0 +1,15 @@
+@EndUserText.label: 'BrewCore: Purchase order UI service'
+define service ZVHB_UI_PURCHASEORDER
+{
+  expose ZVHB_C_PurchaseOrder         as PurchaseOrders;
+  expose ZVHB_C_PurchaseOrderItem     as PurchaseOrderItems;
+
+  expose ZVHB_I_ApprovedRequisitionVH as ApprovedRequisitions;
+  expose ZVHB_I_MaterialVH            as Materials;
+  expose ZVHB_I_SupplierVH            as Suppliers;
+  expose ZVHB_I_PlantVH               as Plants;
+  expose ZVHB_I_StorageLocVH          as StorageLocations;
+  expose ZVHB_I_PaymentTermsVH        as PaymentTerms;
+  expose I_Currency                   as Currencies;
+  expose ZVHB_I_POStatusVH            as OrderStatuses;
+}

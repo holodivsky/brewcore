@@ -69,6 +69,19 @@ CLASS zcl_vhb_demo_data DEFINITION
     "! Initial stock entries (movement type 561); each receipt of a batch-managed material creates a new batch
     METHODS create_initial_stock.
 
+    "! Two requisitions (one approved) and two purchase orders: a small one that goes to the supplier
+    "! at once and a large one that waits for approval
+    METHODS create_procurement.
+
+    METHODS create_requisitions
+      IMPORTING
+        malt_supplier TYPE zvhb_partner.
+
+    METHODS create_purchase_orders
+      IMPORTING
+        malt_supplier TYPE zvhb_partner
+        hops_supplier TYPE zvhb_partner.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -90,6 +103,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_recipes( ).
     create_tanks( ).
     create_initial_stock( ).
+    create_procurement( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -484,6 +498,116 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     LOOP AT movements INTO DATA(movement).
       out->write( |Initial stock { movement-Quantity } of { movement-Material } posted| ).
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD create_procurement.
+    SELECT partner, partner_name FROM zvhb_bp
+      WHERE partner_name = 'Mälzerei Weyer KG' OR partner_name = 'Hopfenhof Hallertau GmbH'
+      INTO TABLE @DATA(suppliers).
+
+    DATA(malt_supplier) = VALUE #( suppliers[ partner_name = 'Mälzerei Weyer KG' ]-partner OPTIONAL ).
+    DATA(hops_supplier) = VALUE #( suppliers[ partner_name = 'Hopfenhof Hallertau GmbH' ]-partner OPTIONAL ).
+    IF malt_supplier IS INITIAL OR hops_supplier IS INITIAL.
+      out->write( |Suppliers missing, procurement skipped| ).
+      RETURN.
+    ENDIF.
+
+    create_requisitions( malt_supplier ).
+    create_purchase_orders( malt_supplier = malt_supplier hops_supplier = hops_supplier ).
+  ENDMETHOD.
+
+  METHOD create_requisitions.
+    SELECT SINGLE @abap_true FROM zvhb_preq INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Purchase requisitions exist, skipped| ).
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_purchaserequisition
+      ENTITY Requisition
+        CREATE FIELDS ( Material Quantity Supplier )
+        WITH VALUE #( ( %cid = 'MALT' Material = 'MALT-PILS' Quantity = 20000 Supplier = malt_supplier )
+                      ( %cid = 'HOPS' Material = 'HOPS-HALL' Quantity = 100 ) )
+      MAPPED DATA(mapped)
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS INITIAL.
+      " The malt requisition is approved and can be turned into a purchase order in the app
+      MODIFY ENTITIES OF zvhb_r_purchaserequisition
+        ENTITY Requisition
+          EXECUTE approve FROM VALUE #( FOR m IN mapped-requisition WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
+        FAILED failed
+        REPORTED reported.
+    ENDIF.
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_purchaserequisition
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Purchase requisitions not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    out->write( |Purchase requisitions created: malt (approved) and hops| ).
+  ENDMETHOD.
+
+  METHOD create_purchase_orders.
+    SELECT SINGLE @abap_true FROM zvhb_pohdr INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Purchase orders exist, skipped| ).
+      RETURN.
+    ENDIF.
+
+    " Hops for 900 EUR go out at once; malt for 12,000 EUR needs an approval
+    MODIFY ENTITIES OF zvhb_r_purchaseorder
+      ENTITY PurchaseOrder
+        CREATE FIELDS ( Supplier )
+        WITH VALUE #( ( %cid = 'HOPS' Supplier = hops_supplier )
+                      ( %cid = 'MALT' Supplier = malt_supplier ) )
+        CREATE BY \_Item
+        FIELDS ( Material Quantity NetPrice )
+        WITH VALUE #( ( %cid_ref = 'HOPS'
+                        %target  = VALUE #( ( %cid = 'HOPS-10' Material = 'HOPS-HALL' Quantity = 50 NetPrice = '18.00' ) ) )
+                      ( %cid_ref = 'MALT'
+                        %target  = VALUE #( ( %cid = 'MALT-10' Material = 'MALT-PILS' Quantity = 25000 NetPrice = '0.48' ) ) ) )
+      MAPPED DATA(mapped)
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS INITIAL.
+      MODIFY ENTITIES OF zvhb_r_purchaseorder
+        ENTITY PurchaseOrder
+          EXECUTE order FROM VALUE #( FOR m IN mapped-purchaseorder ( %tky = m-%tky ) )
+        FAILED failed
+        REPORTED reported.
+    ENDIF.
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_purchaseorder
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Purchase orders not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    out->write( |Purchase orders created: hops (ordered) and malt (awaiting approval)| ).
   ENDMETHOD.
 
   METHOD write_messages.

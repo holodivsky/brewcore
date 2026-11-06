@@ -1,0 +1,125 @@
+managed implementation in class zbp_vhb_r_purchaseorder unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_PurchaseOrder alias PurchaseOrder
+persistent table zvhb_pohdr
+draft table zvhb_pohdr_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _Item { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) PurchaseOrderUUID;
+  field ( readonly ) PurchaseOrder, TotalAmount, Status, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Supplier, Currency;
+
+  static factory action createFromRequisition parameter ZVHB_D_RequisitionReference [1];
+  action ( features : instance ) order result [1] $self;
+  action ( features : instance ) approve result [1] $self;
+  action ( features : instance ) reject result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination copySupplierTerms on modify { field Supplier; }
+  determination setNumber on save { create; }
+
+  validation validateSupplier on save { create; field Supplier; }
+  validation validateCurrency on save { create; field Currency; }
+  validation validateItems on save { create; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateSupplier;
+    validation validateCurrency;
+    validation validateItems;
+    validation Item~validateItem;
+  }
+
+  side effects
+  {
+    field Supplier affects field PaymentTerms, field Currency;
+  }
+
+  mapping for zvhb_pohdr
+  {
+    PurchaseOrderUUID  = po_uuid;
+    PurchaseOrder      = purchase_order;
+    Supplier           = supplier;
+    OrderDate          = order_date;
+    Currency           = currency;
+    PaymentTerms       = payment_terms;
+    TotalAmount        = total_amount;
+    Status             = status;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_PurchaseOrderItem alias Item
+persistent table zvhb_poitm
+draft table zvhb_poitm_d
+lock dependent by _PurchaseOrder
+authorization dependent by _PurchaseOrder
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _PurchaseOrder { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) PurchaseOrderUUID, Item, Unit, NetAmount, ReceivedQuantity, IsDelivered, RequisitionUUID,
+                     LocalLastChangedAt;
+  field ( mandatory ) Material, Plant, StorageLocation, Quantity, NetPrice, Currency, DeliveryDate;
+
+  action ( features : instance ) receiveGoods parameter ZVHB_D_GoodsReceipt result [1] $self;
+
+  // Called by the handler of the inventory event GoodsReceiptPosted; not exposed in the app
+  action applyGoodsReceipt parameter ZVHB_D_ReceivedQuantity result [1] $self;
+
+  determination setItemDefaults on modify { create; }
+  determination setUnit on modify { field Material; }
+  determination calculateAmount on modify { create; field Quantity, NetPrice; }
+
+  validation validateItem on save { create; field Material, Plant, StorageLocation, Quantity, NetPrice, DeliveryDate; }
+
+  side effects
+  {
+    field Material affects field Unit;
+    field Quantity affects field NetAmount, field _PurchaseOrder.TotalAmount;
+    field NetPrice affects field NetAmount, field _PurchaseOrder.TotalAmount;
+  }
+
+  mapping for zvhb_poitm
+  {
+    PurchaseOrderUUID  = po_uuid;
+    ItemUUID           = item_uuid;
+    Item               = item;
+    Material           = material;
+    Plant              = plant;
+    StorageLocation    = storage_location;
+    Unit               = unit;
+    Quantity           = quantity;
+    ReceivedQuantity   = received_quantity;
+    Currency           = currency;
+    NetPrice           = net_price;
+    NetAmount          = net_amount;
+    DeliveryDate       = delivery_date;
+    IsDelivered        = is_delivered;
+    RequisitionUUID    = preq_uuid;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

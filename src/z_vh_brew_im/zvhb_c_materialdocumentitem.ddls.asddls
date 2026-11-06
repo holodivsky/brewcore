@@ -24,6 +24,8 @@ define view entity ZVHB_C_MaterialDocumentItem
       Unit,
       Quantity,
       ReversedItem,
+      PurchaseOrder,
+      PurchaseOrderItem,
 
       @EndUserText.label: 'Best Before'
       _Batch.ExpiryDate      as ExpiryDate,

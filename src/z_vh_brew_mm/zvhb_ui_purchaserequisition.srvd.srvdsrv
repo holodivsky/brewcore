@@ -1,0 +1,11 @@
+@EndUserText.label: 'BrewCore: Purchase requisition UI service'
+define service ZVHB_UI_PURCHASEREQUISITION
+{
+  expose ZVHB_C_PurchaseRequisition as PurchaseRequisitions;
+
+  expose ZVHB_I_MaterialVH          as Materials;
+  expose ZVHB_I_SupplierVH          as Suppliers;
+  expose ZVHB_I_PlantVH             as Plants;
+  expose ZVHB_I_StorageLocVH        as StorageLocations;
+  expose ZVHB_I_PRStatusVH          as RequisitionStatuses;
+}

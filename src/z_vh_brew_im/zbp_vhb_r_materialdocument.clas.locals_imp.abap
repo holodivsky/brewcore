@@ -47,6 +47,8 @@ CLASS lhc_material_document DEFINITION INHERITING FROM cl_abap_behavior_handler 
         Unit              TYPE zvhb_unit,
         Quantity          TYPE zvhb_quantity,
         ReversedItem      TYPE zvhb_matdoc_item,
+        PurchaseOrder     TYPE zvhb_purch_order,
+        PurchaseOrderItem TYPE zvhb_po_item,
       END OF ty_item,
       tt_items TYPE STANDARD TABLE OF ty_item WITH EMPTY KEY.
 
@@ -246,7 +248,9 @@ CLASS lhc_material_document IMPLEMENTATION.
                           ReceivingLocation = movement_data-ReceivingLocation
                           Batch             = movement_data-Batch
                           Unit              = material-BaseUnit
-                          Quantity          = movement_data-Quantity ) ) ).
+                          Quantity          = movement_data-Quantity
+                          PurchaseOrder     = movement_data-PurchaseOrder
+                          PurchaseOrderItem = movement_data-PurchaseOrderItem ) ) ).
   ENDMETHOD.
 
   METHOD check_master_data.
@@ -465,7 +469,8 @@ CLASS lhc_material_document IMPLEMENTATION.
                         HeaderText       = header-HeaderText
                         ReversedDocument = header-ReversedDocument ) )
         CREATE BY \_Item
-        FIELDS ( MovementType Material Plant StorageLocation ReceivingLocation Batch Unit Quantity ReversedItem )
+        FIELDS ( MovementType Material Plant StorageLocation ReceivingLocation Batch Unit Quantity ReversedItem
+                 PurchaseOrder PurchaseOrderItem )
         WITH VALUE #( ( %cid_ref = 'DOCUMENT'
                         %target  = VALUE #( FOR item IN items INDEX INTO i
                                             ( %cid              = |ITEM{ i }|
@@ -477,7 +482,9 @@ CLASS lhc_material_document IMPLEMENTATION.
                                               Batch             = item-Batch
                                               Unit              = item-Unit
                                               Quantity          = item-Quantity
-                                              ReversedItem      = item-ReversedItem ) ) ) )
+                                              ReversedItem      = item-ReversedItem
+                                              PurchaseOrder     = item-PurchaseOrder
+                                              PurchaseOrderItem = item-PurchaseOrderItem ) ) ) )
       MAPPED DATA(created).
 
     result = created-materialdocument[ 1 ]-%pid.
@@ -522,6 +529,8 @@ CLASS lsc_material_document DEFINITION INHERITING FROM cl_abap_behavior_saver.
         item TYPE zvhb_matdoc_item,
       END OF ty_counter,
       tt_counters TYPE HASHED TABLE OF ty_counter WITH UNIQUE KEY pid.
+
+    TYPES tt_receipt_events TYPE TABLE FOR EVENT zvhb_r_materialdocument~GoodsReceiptPosted.
 ENDCLASS.
 
 
@@ -584,6 +593,21 @@ CLASS lsc_material_document IMPLEMENTATION.
     IF create-item IS NOT INITIAL.
       items = CORRESPONDING #( create-item MAPPING FROM ENTITY ).
       INSERT zvhb_mdocitm FROM TABLE @items.
+    ENDIF.
+
+    " Purchasing listens to this event and updates the received quantity of the purchase order
+    DATA(receipts) = VALUE tt_receipt_events(
+      FOR item IN create-item WHERE ( PurchaseOrder IS NOT INITIAL )
+      ( MaterialDocument = item-MaterialDocument
+        %param           = VALUE #( Item              = item-Item
+                                    MovementType      = item-MovementType
+                                    PurchaseOrder     = item-PurchaseOrder
+                                    PurchaseOrderItem = item-PurchaseOrderItem
+                                    Material          = item-Material
+                                    Batch             = item-Batch
+                                    Quantity          = item-Quantity ) ) ).
+    IF receipts IS NOT INITIAL.
+      RAISE ENTITY EVENT zvhb_r_materialdocument~GoodsReceiptPosted FROM receipts.
     ENDIF.
   ENDMETHOD.
 

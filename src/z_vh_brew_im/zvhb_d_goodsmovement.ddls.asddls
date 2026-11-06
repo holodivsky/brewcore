@@ -35,4 +35,10 @@ define abstract entity ZVHB_D_GoodsMovement
 
   @EndUserText.label: 'Text'
   HeaderText        : zvhb_description;
+
+  @UI.hidden: true
+  PurchaseOrder     : zvhb_purch_order;
+
+  @UI.hidden: true
+  PurchaseOrderItem : zvhb_po_item;
 }

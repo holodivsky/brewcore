@@ -6,6 +6,128 @@
     <ARBGB>ZVHB_MM</ARBGB>
     <STEXT>BrewCore: Procurement messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Material &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Material &amp;1 is inactive</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Finished product &amp;1 is produced, not purchased</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Quantity must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Delivery date must not be in the past</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Plant &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Storage location &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Supplier &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Business partner &amp;1 has no supplier role</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Supplier &amp;1 is blocked</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Net price must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Currency &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Purchase order needs at least one item</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>No number assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Purchase requisition &amp;1 is not approved</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Purchase requisition &amp;1 is already ordered</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Goods receipt quantity must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Quantity exceeds the open quantity &amp;1 of item &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Purchase order &amp;1 is not ordered yet</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Purchase order &amp;1 waits for approval: total &amp;2 &amp;3 is above &amp;4</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

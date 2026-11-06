@@ -1,0 +1,79 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Item',
+  typeNamePlural: 'Items',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'Item' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Item', direction: #ASC }] }]
+annotate entity ZVHB_C_PurchaseOrderItem with
+{
+  @UI.facet: [{ id: 'Item', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Item', position: 10 }]
+
+  @UI.hidden: true
+  PurchaseOrderUUID;
+
+  @UI.hidden: true
+  ItemUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'receiveGoods', label: 'Receive Goods' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'receiveGoods', label: 'Receive Goods' }
+  ]
+  Item;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  Quantity;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  ReceivedQuantity;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  NetPrice;
+
+  @UI.lineItem: [{ position: 60, importance: #HIGH }]
+  @UI.identification: [{ position: 60 }]
+  NetAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  @UI.identification: [{ position: 70 }]
+  DeliveryDate;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  @UI.identification: [{ position: 80 }]
+  StorageLocation;
+
+  @UI.identification: [{ position: 90 }]
+  Plant;
+
+  @UI.lineItem: [{ position: 90, importance: #MEDIUM }]
+  @UI.identification: [{ position: 100 }]
+  IsDelivered;
+
+  @UI.hidden: true
+  RequisitionUUID;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

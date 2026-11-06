@@ -16,6 +16,9 @@ authorization master ( global )
   static factory action postGoodsMovement parameter ZVHB_D_GoodsMovement [1];
   factory action ( features : instance ) reverse [1];
 
+  // Raised after the save for every item that refers to a purchase order (101 and its reversal 102)
+  event GoodsReceiptPosted parameter ZVHB_D_GoodsReceiptPosted;
+
   mapping for zvhb_mdochdr
   {
     MaterialDocument = material_document;
@@ -35,7 +38,7 @@ authorization dependent by _MaterialDocument
   association _MaterialDocument;
 
   field ( readonly ) MaterialDocument, Item, MovementType, Material, Plant, StorageLocation, ReceivingLocation,
-                     Batch, Unit, Quantity, ReversedItem;
+                     Batch, Unit, Quantity, ReversedItem, PurchaseOrder, PurchaseOrderItem;
 
   mapping for zvhb_mdocitm
   {
@@ -50,5 +53,7 @@ authorization dependent by _MaterialDocument
     Unit              = unit;
     Quantity          = quantity;
     ReversedItem      = reversed_item;
+    PurchaseOrder     = purchase_order;
+    PurchaseOrderItem = purchase_order_item;
   }
 }

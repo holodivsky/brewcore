@@ -1,0 +1,64 @@
+managed implementation in class zbp_vhb_r_purchaserequisition unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_PurchaseRequisition alias Requisition
+persistent table zvhb_preq
+draft table zvhb_preq_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  field ( numbering : managed, readonly ) RequisitionUUID;
+  field ( readonly ) PurchaseRequisition, Unit, Status, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Material, Plant, StorageLocation, Quantity, DeliveryDate;
+
+  action ( features : instance ) approve result [1] $self;
+
+  // Called by the purchase order when it is created from this requisition; not exposed in the app
+  action markOrdered result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination setUnit on modify { field Material; }
+  determination setNumber on save { create; }
+
+  validation validateRequisition on save { create; field Material, Plant, StorageLocation, Quantity, DeliveryDate, Supplier; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateRequisition;
+  }
+
+  side effects
+  {
+    field Material affects field Unit;
+  }
+
+  mapping for zvhb_preq
+  {
+    RequisitionUUID     = preq_uuid;
+    PurchaseRequisition = purchase_requisition;
+    Material            = material;
+    Plant               = plant;
+    StorageLocation     = storage_location;
+    Unit                = unit;
+    Quantity            = quantity;
+    DeliveryDate        = delivery_date;
+    Supplier            = supplier;
+    Status              = status;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
