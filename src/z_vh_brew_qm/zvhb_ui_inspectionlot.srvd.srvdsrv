@@ -1,0 +1,12 @@
+@EndUserText.label: 'BrewCore: Inspection lot UI service'
+define service ZVHB_UI_INSPECTIONLOT
+{
+  expose ZVHB_C_InspectionLot  as InspectionLots;
+  expose ZVHB_C_InspectionChar as InspectionCharacteristics;
+
+  expose ZVHB_I_MaterialVH     as Materials;
+  expose ZVHB_I_SupplierVH     as Suppliers;
+  expose ZVHB_I_BatchStatusVH  as BatchStatuses;
+  expose ZVHB_I_LotStatusVH    as LotStatuses;
+  expose ZVHB_I_LotOriginVH    as LotOrigins;
+}

@@ -6,6 +6,80 @@
     <ARBGB>ZVHB_QM</ARBGB>
     <STEXT>BrewCore: Quality messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Inspection lot number could not be assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Record the result of &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>&amp;1 is out of tolerance: &amp;2, allowed &amp;3 to &amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>&amp;1: the result &amp;2 is not a number</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>&amp;1: enter 0 for no or 1 for yes</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>&amp;1: enter a whole score from 1 to 5</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Inspection lot &amp;1 accepted: batch &amp;2 released</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Inspection lot &amp;1 rejected: &amp;2 of batch &amp;3 scrapped</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Inspection lot &amp;1 rejected: batch &amp;2 blocked</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>In tolerance</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Out of tolerance</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_QM</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Not recorded</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

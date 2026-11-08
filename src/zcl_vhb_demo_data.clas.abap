@@ -125,6 +125,14 @@ CLASS zcl_vhb_demo_data DEFINITION
       IMPORTING
         tank TYPE zvhb_tank.
 
+    "! Opens inspection lots for goods receipts that were posted before quality management existed;
+    "! new receipts get their lot from the event GoodsReceiptPosted
+    METHODS create_inspection_lots.
+
+    "! Records results of the open lots without results: malt is accepted, hops are rejected for
+    "! contamination, the beer lot waits with an extract above the tolerance for the decision in the app
+    METHODS record_inspection_results.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -148,6 +156,8 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_initial_stock( ).
     create_procurement( ).
     create_brew_orders( ).
+    create_inspection_lots( ).
+    record_inspection_results( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -581,7 +591,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
       " The malt requisition is approved and can be turned into a purchase order in the app
       MODIFY ENTITIES OF zvhb_r_purchaserequisition
         ENTITY Requisition
-          EXECUTE approve FROM VALUE #( FOR m IN mapped-requisition WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
+          EXECUTE approve FROM VALUE #( FOR m IN mapped-requisition USING KEY cid WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
         FAILED failed
         REPORTED reported.
     ENDIF.
@@ -688,7 +698,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
       " The maltings charges 0.50 EUR per kg instead of the agreed 0.48
       READ ENTITIES OF zvhb_r_supplierinvoice
         ENTITY Invoice BY \_Item
-          FIELDS ( NetPrice ) WITH VALUE #( FOR m IN mapped-invoice WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
+          FIELDS ( NetPrice ) WITH VALUE #( FOR m IN mapped-invoice USING KEY cid WHERE ( %cid = 'MALT' ) ( %tky = m-%tky ) )
         RESULT DATA(malt_items).
 
       MODIFY ENTITIES OF zvhb_r_supplierinvoice
@@ -931,6 +941,117 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     ENDIF.
 
     out->write( |Cleaning of tank { tank } finished| ).
+  ENDMETHOD.
+
+  METHOD create_inspection_lots.
+    SELECT item~material_document, item~item, item~purchase_order, item~brew_order, item~material,
+           item~batch, item~plant, item~storage_location, item~unit, item~quantity
+      FROM zvhb_mdocitm AS item
+      WHERE item~movement_type = '101'
+        AND item~batch        <> ' '
+        AND ( item~purchase_order <> ' ' OR item~brew_order <> ' ' )
+        AND NOT EXISTS ( SELECT lot_uuid FROM zvhb_insplot
+                           WHERE material = item~material
+                             AND batch    = item~batch )
+      INTO TABLE @DATA(receipts).
+
+    IF receipts IS INITIAL.
+      out->write( |Inspection lots exist, skipped| ).
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_inspectionlot
+      ENTITY InspectionLot
+        EXECUTE createFromGoodsReceipt
+        FROM VALUE #( FOR r IN receipts INDEX INTO i
+                      ( %cid   = |RECEIPT{ i }|
+                        %param = VALUE #( MaterialDocument = r-material_document
+                                          DocumentItem     = r-item
+                                          PurchaseOrder    = r-purchase_order
+                                          BrewOrder        = r-brew_order
+                                          Material         = r-material
+                                          Batch            = r-batch
+                                          Plant            = r-plant
+                                          StorageLocation  = r-storage_location
+                                          Unit             = r-unit
+                                          Quantity         = r-quantity ) ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_inspectionlot
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      out->write( |Inspection lots not saved:| ).
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    SELECT COUNT( * ) FROM zvhb_insplot INTO @DATA(lot_count).
+    out->write( |Inspection lots opened, { lot_count } in total| ).
+  ENDMETHOD.
+
+  METHOD record_inspection_results.
+    SELECT lot_uuid, inspection_lot, material FROM zvhb_insplot
+      WHERE status = 'OPEN'
+      ORDER BY inspection_lot
+      INTO TABLE @DATA(lots).
+
+    LOOP AT lots INTO DATA(lot).
+      SELECT char_uuid, result_value FROM zvhb_inspchar
+        WHERE lot_uuid = @lot-lot_uuid
+        ORDER BY sort_order
+        INTO TABLE @DATA(characteristics).
+      IF NOT line_exists( characteristics[ result_value = ' ' ] ).
+        CONTINUE.
+      ENDIF.
+
+      DATA(results) = SWITCH string_table( lot-material
+                                           WHEN 'PILS'      THEN VALUE #( ( `11.9` ) ( `4.9` ) ( `4.4` ) ( `0` ) ( `4` ) )
+                                           WHEN 'HOPS-HALL' THEN VALUE #( ( `1` ) ( `2` ) )
+                                           ELSE VALUE #( ( `0` ) ( `4` ) ) ).
+
+      MODIFY ENTITIES OF zvhb_r_inspectionlot
+        ENTITY Characteristic
+          UPDATE FIELDS ( ResultValue )
+          WITH VALUE #( FOR c IN characteristics INDEX INTO i
+                        ( %is_draft          = if_abap_behv=>mk-off
+                          LotUUID            = lot-lot_uuid
+                          CharacteristicUUID = c-char_uuid
+                          ResultValue        = COND #( WHEN i <= lines( results ) THEN results[ i ] ) ) )
+        REPORTED DATA(reported).
+
+      " The beer lot is decided in the app; the raw material lots are decided here
+      CASE lot-material.
+        WHEN 'PILS'.
+        WHEN 'HOPS-HALL'.
+          MODIFY ENTITIES OF zvhb_r_inspectionlot ENTITY InspectionLot
+            EXECUTE reject FROM VALUE #( ( %is_draft = if_abap_behv=>mk-off LotUUID = lot-lot_uuid ) )
+            REPORTED reported.
+        WHEN OTHERS.
+          MODIFY ENTITIES OF zvhb_r_inspectionlot ENTITY InspectionLot
+            EXECUTE accept FROM VALUE #( ( %is_draft = if_abap_behv=>mk-off LotUUID = lot-lot_uuid ) )
+            REPORTED reported.
+      ENDCASE.
+      write_messages( reported ).
+
+      COMMIT ENTITIES RESPONSE OF zvhb_r_inspectionlot
+        FAILED DATA(commit_failed)
+        REPORTED DATA(commit_reported).
+      IF commit_failed IS NOT INITIAL.
+        out->write( |Results of inspection lot { lot-inspection_lot } not saved:| ).
+        write_messages( commit_reported ).
+      ELSE.
+        out->write( |Results of inspection lot { lot-inspection_lot } ({ lot-material }) recorded| ).
+      ENDIF.
+    ENDLOOP.
   ENDMETHOD.
 
   METHOD write_messages.

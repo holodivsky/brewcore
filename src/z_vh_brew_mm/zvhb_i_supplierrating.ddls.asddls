@@ -8,6 +8,7 @@ define view entity ZVHB_I_SupplierRating
   as select from         ZVHB_I_SupplierVH          as Supplier
     left outer to one join ZVHB_I_SupplierDeliveryKPI as Delivery on Delivery.Supplier = Supplier.Supplier
     left outer to one join ZVHB_I_SupplierPriceKPI    as Price    on Price.Supplier = Supplier.Supplier
+    left outer to one join ZVHB_I_SupplierQualityKPI  as Quality  on Quality.Supplier = Supplier.Supplier
 {
   key Supplier.Supplier,
       Supplier.SupplierName,
@@ -53,6 +54,10 @@ define view entity ZVHB_I_SupplierRating
            else cast( 100 as zvhb_score )
       end                                      as PriceScore,
 
-      // Inspection results follow with quality management in v0.8
-      cast( 100 as zvhb_score )                as QualityScore
+      // Share of accepted raw material lots among all decided lots
+      case when Quality.DecidedLotCount > 0
+           then cast( division( ( Quality.DecidedLotCount - Quality.RejectedLotCount ) * 100,
+                                Quality.DecidedLotCount, 1 ) as zvhb_score )
+           else cast( 100 as zvhb_score )
+      end                                      as QualityScore
 }

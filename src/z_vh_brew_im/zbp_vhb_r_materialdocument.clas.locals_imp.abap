@@ -534,6 +534,13 @@ CLASS lsc_material_document DEFINITION INHERITING FROM cl_abap_behavior_saver.
       tt_counters TYPE HASHED TABLE OF ty_counter WITH UNIQUE KEY pid.
 
     TYPES tt_receipt_events TYPE TABLE FOR EVENT zvhb_r_materialdocument~GoodsReceiptPosted.
+
+    CONSTANTS:
+      "! Movement types published with the event GoodsReceiptPosted
+      BEGIN OF receipt_types,
+        receipt  TYPE zvhb_movement_type VALUE '101',
+        reversal TYPE zvhb_movement_type VALUE '102',
+      END OF receipt_types.
 ENDCLASS.
 
 
@@ -598,16 +605,23 @@ CLASS lsc_material_document IMPLEMENTATION.
       INSERT zvhb_mdocitm FROM TABLE @items.
     ENDIF.
 
-    " Purchasing listens to this event and updates the received quantity of the purchase order
+    " Purchasing updates the received quantity of the purchase order, quality management opens an
+    " inspection lot for the new batch; only receipts from a purchase order or a brew order are published
     DATA(receipts) = VALUE tt_receipt_events(
-      FOR item IN create-item WHERE ( PurchaseOrder IS NOT INITIAL )
+      FOR item IN create-item
+      WHERE ( ( MovementType = receipt_types-receipt OR MovementType = receipt_types-reversal )
+          AND ( PurchaseOrder IS NOT INITIAL OR BrewOrder IS NOT INITIAL ) )
       ( MaterialDocument = item-MaterialDocument
         %param           = VALUE #( Item              = item-Item
                                     MovementType      = item-MovementType
                                     PurchaseOrder     = item-PurchaseOrder
                                     PurchaseOrderItem = item-PurchaseOrderItem
+                                    BrewOrder         = item-BrewOrder
                                     Material          = item-Material
                                     Batch             = item-Batch
+                                    Plant             = item-Plant
+                                    StorageLocation   = item-StorageLocation
+                                    Unit              = item-Unit
                                     Quantity          = item-Quantity ) ) ).
     IF receipts IS NOT INITIAL.
       RAISE ENTITY EVENT zvhb_r_materialdocument~GoodsReceiptPosted FROM receipts.

@@ -1,0 +1,102 @@
+managed implementation in class zbp_vhb_r_inspectionlot unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_InspectionLot alias InspectionLot
+persistent table zvhb_insplot
+draft table zvhb_insplot_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  // Lots are opened by goods receipts only, through the static action; the inspector records results
+  // in the characteristics and decides with accept or reject
+  internal create;
+  update ( features : instance );
+  internal delete;
+
+  association _Characteristic { internal create; with draft; }
+
+  field ( numbering : managed, readonly ) LotUUID;
+  field ( readonly ) InspectionLot, Origin, Material, Batch, Plant, StorageLocation, Unit, Quantity,
+                     MaterialDocument, DocumentItem, PurchaseOrder, Supplier, BrewOrder, Status, StatusCriticality,
+                     DecisionDate, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  // Called by the goods receipt event handler; not exposed in the app
+  static action createFromGoodsReceipt parameter ZVHB_D_InspectionRequest;
+
+  // Usage decision
+  action ( features : instance ) accept result [1] $self;
+  action ( features : instance ) reject result [1] $self;
+
+  determination setNumber on save { create; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation Characteristic~validateResult;
+  }
+
+  mapping for zvhb_insplot
+  {
+    LotUUID            = lot_uuid;
+    InspectionLot      = inspection_lot;
+    Origin             = origin;
+    Material           = material;
+    Batch              = batch;
+    Plant              = plant;
+    StorageLocation    = storage_location;
+    Unit               = unit;
+    Quantity           = quantity;
+    MaterialDocument   = material_document;
+    DocumentItem       = document_item;
+    PurchaseOrder      = purchase_order;
+    Supplier           = supplier;
+    BrewOrder          = brew_order;
+    Status             = status;
+    DecisionDate       = decision_date;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_InspectionChar alias Characteristic
+persistent table zvhb_inspchar
+draft table zvhb_inspchar_d
+lock dependent by _InspectionLot
+authorization dependent by _InspectionLot
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  internal delete;
+
+  association _InspectionLot { with draft; }
+
+  field ( numbering : managed, readonly ) CharacteristicUUID;
+  field ( readonly ) LotUUID, SortOrder, Characteristic, Description, UnitText, TargetValue, LowerLimit, UpperLimit,
+                     LocalLastChangedAt;
+
+  validation validateResult on save { create; field ResultValue; }
+
+  mapping for zvhb_inspchar
+  {
+    LotUUID            = lot_uuid;
+    CharacteristicUUID = char_uuid;
+    SortOrder          = sort_order;
+    Characteristic     = characteristic;
+    Description        = description;
+    UnitText           = unit_text;
+    TargetValue        = target_value;
+    LowerLimit         = lower_limit;
+    UpperLimit         = upper_limit;
+    ResultValue        = result_value;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

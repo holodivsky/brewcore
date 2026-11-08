@@ -1,0 +1,26 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZVHB_C_InspectionLot alias InspectionLot
+{
+  use update;
+
+  use action accept;
+  use action reject;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Characteristic { with draft; }
+}
+
+define behavior for ZVHB_C_InspectionChar alias Characteristic
+{
+  use update;
+
+  use association _InspectionLot { with draft; }
+}

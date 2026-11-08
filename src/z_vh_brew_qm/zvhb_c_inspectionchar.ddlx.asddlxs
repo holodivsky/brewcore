@@ -1,0 +1,58 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Characteristic',
+  typeNamePlural: 'Characteristics',
+  title: { type: #STANDARD, value: 'Description' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'SortOrder', direction: #ASC }] }]
+annotate entity ZVHB_C_InspectionChar with
+{
+  @UI.facet: [
+    { id: 'Result', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Result', position: 10 }
+  ]
+  @UI.hidden: true
+  LotUUID;
+
+  @UI.hidden: true
+  CharacteristicUUID;
+
+  @UI.hidden: true
+  SortOrder;
+
+  @UI.hidden: true
+  Characteristic;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Description;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  ResultValue;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  UnitText;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  LowerLimit;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  UpperLimit;
+
+  @UI.lineItem: [{ position: 60, importance: #LOW }]
+  @UI.identification: [{ position: 60 }]
+  TargetValue;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH, criticality: 'ValuationCriticality', criticalityRepresentation: #WITH_ICON }]
+  @UI.identification: [{ position: 70, criticality: 'ValuationCriticality', criticalityRepresentation: #WITH_ICON }]
+  ValuationText;
+
+  @UI.hidden: true
+  ValuationCriticality;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}
