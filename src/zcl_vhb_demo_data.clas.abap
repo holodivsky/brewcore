@@ -133,6 +133,32 @@ CLASS zcl_vhb_demo_data DEFINITION
     "! contamination, the beer lot waits with an extract above the tolerance for the decision in the app
     METHODS record_inspection_results.
 
+    "! Three sales orders: the wholesaler gets 6,000 bottles delivered by FEFO and invoiced and returns
+    "! 120 crates; the inn orders 12,000 bottles of which only the rest of the stock is confirmed, and a
+    "! second inn order goes over the credit limit
+    METHODS create_sales.
+
+    "! Bottled Pils is sold in crates of 20 with a deposit
+    METHODS assign_packaging.
+
+    METHODS create_sales_order
+      IMPORTING
+        customer      TYPE zvhb_partner
+        channel       TYPE zvhb_distr_channel
+        quantity      TYPE zvhb_quantity
+      RETURNING
+        VALUE(result) TYPE sysuuid_x16.
+
+    "! Delivery, goods issue and invoice, each saved on its own as in the apps
+    METHODS deliver_and_bill
+      IMPORTING
+        order_uuid TYPE sysuuid_x16.
+
+    METHODS return_empties
+      IMPORTING
+        customer TYPE zvhb_partner
+        quantity TYPE zvhb_quantity.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -158,6 +184,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_brew_orders( ).
     create_inspection_lots( ).
     record_inspection_results( ).
+    create_sales( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -1052,6 +1079,152 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
         out->write( |Results of inspection lot { lot-inspection_lot } ({ lot-material }) recorded| ).
       ENDIF.
     ENDLOOP.
+  ENDMETHOD.
+
+  METHOD create_sales.
+    SELECT SINGLE @abap_true FROM zvhb_sohdr INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Sales orders exist, skipped| ).
+      RETURN.
+    ENDIF.
+
+    assign_packaging( ).
+
+    SELECT SINGLE partner FROM zvhb_bp WHERE partner_name = 'Getränke Huber GmbH' INTO @DATA(wholesaler).
+    SELECT SINGLE partner FROM zvhb_bp WHERE partner_name = 'Gasthaus Zum Kupferkessel' INTO @DATA(inn).
+
+    DATA(first) = create_sales_order( customer = wholesaler channel = 'GF' quantity = 6000 ).
+    IF first IS NOT INITIAL.
+      deliver_and_bill( first ).
+      return_empties( customer = wholesaler quantity = 120 ).
+    ENDIF.
+
+    create_sales_order( customer = inn channel = 'GA' quantity = 12000 ).
+    create_sales_order( customer = inn channel = 'GA' quantity = 4000 ).
+
+    SELECT sales_order, customer, total_amount, currency, status FROM zvhb_sohdr
+      ORDER BY sales_order
+      INTO TABLE @DATA(orders).
+    LOOP AT orders INTO DATA(order).
+      out->write( |Sales order { order-sales_order } for { order-customer }: | &&
+                  |{ order-total_amount NUMBER = USER } { order-currency }, status { order-status }| ).
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD assign_packaging.
+    SELECT SINGLE returnable_packaging FROM zvhb_mat
+      WHERE material = 'PILS-BTL05'
+      INTO @DATA(packaging).
+    IF packaging IS NOT INITIAL.
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_material
+      ENTITY Material
+        UPDATE FIELDS ( ReturnablePackaging UnitsPerPackage )
+        WITH VALUE #( ( %is_draft = if_abap_behv=>mk-off Material = 'PILS-BTL05'
+                        ReturnablePackaging = 'CRATE-20' UnitsPerPackage = 20 ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_material
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+    IF commit_failed IS NOT INITIAL.
+      write_messages( commit_reported ).
+    ELSE.
+      out->write( |PILS-BTL05 is sold in crates CRATE-20 of 20 bottles| ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD create_sales_order.
+    " Price, deposit item, confirmed quantity and credit check follow from the business object
+    MODIFY ENTITIES OF zvhb_r_salesorder
+      ENTITY SalesOrder
+        CREATE FIELDS ( Customer DistributionChannel RequestedDate )
+        WITH VALUE #( ( %cid = 'ORDER' Customer = customer DistributionChannel = channel
+                        RequestedDate = cl_abap_context_info=>get_system_date( ) + 2 ) )
+        CREATE BY \_Item
+        FIELDS ( Material Quantity )
+        WITH VALUE #( ( %cid_ref = 'ORDER'
+                        %target  = VALUE #( ( %cid = 'ITEM' Material = 'PILS-BTL05' Quantity = quantity ) ) ) )
+      MAPPED DATA(mapped)
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_salesorder
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+    write_messages( commit_reported ).
+    IF commit_failed IS INITIAL.
+      result = mapped-salesorder[ 1 ]-SalesOrderUUID.
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD deliver_and_bill.
+    MODIFY ENTITIES OF zvhb_r_salesorder
+      ENTITY SalesOrder
+        EXECUTE createDelivery FROM VALUE #( ( %is_draft = if_abap_behv=>mk-off SalesOrderUUID = order_uuid ) )
+      FAILED DATA(order_failed)
+      REPORTED DATA(order_reported).
+    write_messages( order_reported ).
+    IF order_failed IS NOT INITIAL.
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+    COMMIT ENTITIES.
+
+    SELECT SINGLE dlv_uuid FROM zvhb_dlvhdr WHERE so_uuid = @order_uuid INTO @DATA(delivery_uuid).
+
+    " FR-SD-04: goods issue by FEFO batches, then FR-SD-05: invoice from the delivery
+    MODIFY ENTITIES OF zvhb_r_delivery
+      ENTITY Delivery
+        EXECUTE postGoodsIssue FROM VALUE #( ( DeliveryUUID = delivery_uuid ) )
+      FAILED DATA(issue_failed)
+      REPORTED DATA(issue_reported).
+    write_messages( issue_reported ).
+    IF issue_failed IS NOT INITIAL.
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+    COMMIT ENTITIES.
+
+    MODIFY ENTITIES OF zvhb_r_delivery
+      ENTITY Delivery
+        EXECUTE createInvoice FROM VALUE #( ( DeliveryUUID = delivery_uuid ) )
+      FAILED DATA(invoice_failed)
+      REPORTED DATA(invoice_reported).
+    write_messages( invoice_reported ).
+    IF invoice_failed IS NOT INITIAL.
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+    COMMIT ENTITIES.
+  ENDMETHOD.
+
+  METHOD return_empties.
+    MODIFY ENTITIES OF zvhb_r_billingdocument
+      ENTITY BillingDocument
+        EXECUTE returnEmpties
+        FROM VALUE #( ( %cid = 'RETURN' %param = VALUE #( Customer = customer Material = 'CRATE-20' Quantity = quantity ) ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    write_messages( reported ).
+    IF failed IS NOT INITIAL.
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+    COMMIT ENTITIES.
   ENDMETHOD.
 
   METHOD write_messages.

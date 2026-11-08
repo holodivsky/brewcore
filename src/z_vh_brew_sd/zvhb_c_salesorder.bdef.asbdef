@@ -1,0 +1,30 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZVHB_C_SalesOrder alias SalesOrder
+{
+  use create;
+  use update;
+  use delete;
+
+  use action releaseCredit;
+  use action createDelivery;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Item { create; with draft; }
+}
+
+define behavior for ZVHB_C_SalesOrderItem alias Item
+{
+  use update;
+  use delete;
+
+  use association _SalesOrder { with draft; }
+}

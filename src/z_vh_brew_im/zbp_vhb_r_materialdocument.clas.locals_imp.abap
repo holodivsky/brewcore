@@ -17,6 +17,7 @@ CLASS lhc_material_document DEFINITION INHERITING FROM cl_abap_behavior_handler 
         scrapping        TYPE zvhb_movement_type VALUE '551',
         initial_entry    TYPE zvhb_movement_type VALUE '561',
         delivery         TYPE zvhb_movement_type VALUE '601',
+        customer_return  TYPE zvhb_movement_type VALUE '653',
       END OF movement_types.
 
     TYPES ty_movement TYPE zvhb_d_goodsmovement.
@@ -258,7 +259,8 @@ CLASS lhc_material_document IMPLEMENTATION.
   METHOD check_master_data.
     CASE movement-MovementType.
       WHEN movement_types-goods_receipt OR movement_types-production_issue OR movement_types-transfer
-        OR movement_types-scrapping OR movement_types-initial_entry OR movement_types-delivery.
+        OR movement_types-scrapping OR movement_types-initial_entry OR movement_types-delivery
+        OR movement_types-customer_return.
       WHEN OTHERS.
         result = error( number = '001' v1 = movement-MovementType ).
         RETURN.
@@ -302,7 +304,7 @@ CLASS lhc_material_document IMPLEMENTATION.
       CASE movement-MovementType.
         WHEN movement_types-goods_receipt OR movement_types-initial_entry.
           new_batch = abap_true.
-        WHEN movement_types-scrapping.
+        WHEN movement_types-scrapping OR movement_types-customer_return.
           result = error( number = '007' v1 = movement-Material ).
         WHEN OTHERS.
           result = propose_fefo_batch( CHANGING movement = movement ).
@@ -458,7 +460,8 @@ CLASS lhc_material_document IMPLEMENTATION.
                                     WHEN movement_types-transfer         THEN '312'
                                     WHEN movement_types-scrapping        THEN '552'
                                     WHEN movement_types-initial_entry    THEN '562'
-                                    WHEN movement_types-delivery         THEN '602' ).
+                                    WHEN movement_types-delivery         THEN '602'
+                                    WHEN movement_types-customer_return  THEN '654' ).
     result-ReversedItem = item_number.
   ENDMETHOD.
 

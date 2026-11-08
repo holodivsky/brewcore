@@ -31,6 +31,15 @@ CLASS ltc_material DEFINITION FINAL
     METHODS product_without_batches_fails FOR TESTING.
     METHODS batches_need_shelf_life FOR TESTING.
     METHODS packaging_without_batches_ok FOR TESTING.
+    METHODS packaging_must_be_empties FOR TESTING.
+    METHODS packaging_needs_units FOR TESTING.
+    METHODS crate_with_units_passes FOR TESTING.
+
+    "! Bottle sold in the given packaging; the packaging material is created first
+    METHODS validate_packaging
+      IMPORTING
+        packaging_type TYPE zvhb_material_type
+        units          TYPE int2.
     METHODS new_material_is_active FOR TESTING.
     METHODS product_gets_batch_management FOR TESTING.
     METHODS valid_conversion_passes FOR TESTING.
@@ -226,6 +235,43 @@ CLASS ltc_material IMPLEMENTATION.
                                         shelf_life_days  = 0 ) ).
 
     cl_abap_unit_assert=>assert_initial( failed-material ).
+  ENDMETHOD.
+
+  METHOD packaging_must_be_empties.
+    validate_packaging( packaging_type = 'FERT' units = 20 ).
+
+    assert_error( '046' ).
+  ENDMETHOD.
+
+  METHOD packaging_needs_units.
+    validate_packaging( packaging_type = 'LEER' units = 0 ).
+
+    assert_error( '047' ).
+  ENDMETHOD.
+
+  METHOD crate_with_units_passes.
+    validate_packaging( packaging_type = 'LEER' units = 20 ).
+
+    cl_abap_unit_assert=>assert_initial( failed-material ).
+  ENDMETHOD.
+
+  METHOD validate_packaging.
+    MODIFY ENTITIES OF zvhb_r_material
+      ENTITY Material
+        CREATE FIELDS ( Material MaterialType BaseUnit )
+        WITH VALUE #( ( %cid = 'CRATE' Material = 'CRATE-20' MaterialType = packaging_type BaseUnit = 'ST' ) )
+      MAPPED DATA(crate).
+    material_handler->setdefaults( keys = CORRESPONDING #( crate-material ) ).
+
+    DATA(mapped) = create_material( ).
+    MODIFY ENTITIES OF zvhb_r_material
+      ENTITY Material
+        UPDATE FIELDS ( ReturnablePackaging UnitsPerPackage )
+        WITH VALUE #( FOR m IN mapped-material ( %tky = m-%tky ReturnablePackaging = 'CRATE-20' UnitsPerPackage = units ) ).
+
+    material_handler->validatepackaging( EXPORTING keys     = CORRESPONDING #( mapped-material )
+                                         CHANGING  failed   = failed
+                                                   reported = reported ).
   ENDMETHOD.
 
   METHOD new_material_is_active.

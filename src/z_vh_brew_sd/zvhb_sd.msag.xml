@@ -6,6 +6,134 @@
     <ARBGB>ZVHB_SD</ARBGB>
     <STEXT>BrewCore: Sales messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Document number could not be assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Enter a customer</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>&amp;1 is not a customer</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Customer &amp;1 is blocked</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Distribution channel &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Requested delivery date &amp;1 is in the past</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>The order needs at least one product item</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Item &amp;1: &amp;2 is not an active finished product</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Item &amp;1: enter a quantity greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Item &amp;1: no price for &amp;2 in distribution channel &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Item &amp;1: only &amp;2 of &amp;3 can be confirmed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Credit limit &amp;1 exceeded with &amp;2 open; the order is blocked</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Credit block of sales order &amp;1 released</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Delivery created for sales order &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Sales order &amp;1 has no confirmed quantity to deliver</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Not enough free stock of &amp;1: &amp;2 missing</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Goods issued for delivery &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Invoice created for delivery &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Enter a returned quantity greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>&amp;1 has only &amp;2 of &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_SD</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Credit memo for &amp;1 returned by &amp;2</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

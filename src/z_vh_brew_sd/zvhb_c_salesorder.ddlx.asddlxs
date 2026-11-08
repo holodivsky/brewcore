@@ -1,0 +1,102 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Sales Order',
+  typeNamePlural: 'Sales Orders',
+  title: { type: #STANDARD, value: 'SalesOrder' },
+  description: { type: #STANDARD, value: 'CustomerName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'SalesOrder', direction: #DESC }] }]
+annotate entity ZVHB_C_SalesOrder with
+{
+  @UI.facet: [
+    { id: 'Status',     purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Status', position: 10 },
+    { id: 'Total',      purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Total', position: 20 },
+    { id: 'General',    purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Order', position: 10 },
+    { id: 'Items',      purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_Item' },
+    { id: 'Values',     purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Values', position: 30, targetQualifier: 'Values' },
+    { id: 'Deliveries', purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Deliveries', position: 40, targetElement: '_Delivery' },
+    { id: 'Admin',      purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 50, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  SalesOrderUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'releaseCredit', label: 'Release Credit Block' },
+    { type: #FOR_ACTION, dataAction: 'createDelivery', label: 'Create Delivery' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'releaseCredit', label: 'Release Credit Block' },
+    { type: #FOR_ACTION, dataAction: 'createDelivery', label: 'Create Delivery' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  SalesOrder;
+
+  @UI.lineItem: [{ position: 15, importance: #HIGH, criticality: 'StatusCriticality' }]
+  @UI.dataPoint: { qualifier: 'Status', title: 'Status', criticality: 'StatusCriticality' }
+  @UI.selectionField: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.hidden: true
+  StatusCriticality;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Customer;
+
+  @UI.hidden: true
+  CustomerName;
+
+  @UI.lineItem: [{ position: 30, importance: #MEDIUM }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  DistributionChannel;
+
+  @UI.hidden: true
+  DistributionChannelName;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  OrderDate;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  RequestedDate;
+
+  @UI.fieldGroup: [{ qualifier: 'Values', position: 10 }]
+  NetAmount;
+
+  @UI.fieldGroup: [{ qualifier: 'Values', position: 20 }]
+  DepositAmount;
+
+  @UI.lineItem: [{ position: 60, importance: #HIGH }]
+  @UI.fieldGroup: [{ qualifier: 'Values', position: 30 }]
+  @UI.dataPoint: { qualifier: 'Total', title: 'Total' }
+  TotalAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

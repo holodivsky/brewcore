@@ -97,6 +97,20 @@
      <DOMVALUE_L>602</DOMVALUE_L>
      <DDTEXT>Delivery reversal</DDTEXT>
     </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0013</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>653</DOMVALUE_L>
+     <DDTEXT>Customer return</DDTEXT>
+    </DD07V>
+    <DD07V>
+     <DOMNAME>ZVHB_MOVEMENT_TYPE</DOMNAME>
+     <VALPOS>0014</VALPOS>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DOMVALUE_L>654</DOMVALUE_L>
+     <DDTEXT>Customer return reversal</DDTEXT>
+    </DD07V>
    </DD07V_TAB>
   </asx:values>
  </asx:abap>

@@ -1,0 +1,71 @@
+managed implementation in class zbp_vhb_r_delivery unique;
+strict ( 2 );
+
+define behavior for ZVHB_R_Delivery alias Delivery
+persistent table zvhb_dlvhdr
+lock master
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  // Deliveries are created by the action createDelivery of the sales order and change only through actions
+  create ( authorization : global );
+  internal update;
+
+  association _Item { create; }
+
+  field ( numbering : managed, readonly ) DeliveryUUID;
+  field ( readonly ) Delivery, Status, StatusCriticality, GoodsIssueDate,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( readonly : update ) SalesOrderUUID, SalesOrder, Customer;
+
+  // FR-SD-04 and FR-SD-05
+  action ( features : instance ) postGoodsIssue result [1] $self;
+  action ( features : instance ) createInvoice result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination setNumber on save { create; }
+
+  mapping for zvhb_dlvhdr
+  {
+    DeliveryUUID       = dlv_uuid;
+    Delivery           = delivery;
+    SalesOrderUUID     = so_uuid;
+    SalesOrder         = sales_order;
+    Customer           = customer;
+    Status             = status;
+    GoodsIssueDate     = goods_issue_date;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_DeliveryItem alias Item
+persistent table zvhb_dlvitm
+lock dependent by _Delivery
+authorization dependent by _Delivery
+etag master LocalLastChangedAt
+{
+  association _Delivery;
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) DeliveryUUID, LocalLastChangedAt;
+
+  mapping for zvhb_dlvitm
+  {
+    DeliveryUUID       = dlv_uuid;
+    ItemUUID           = item_uuid;
+    Item               = item;
+    OrderItem          = order_item;
+    ItemCategory       = item_category;
+    Material           = material;
+    Batch              = batch;
+    Plant              = plant;
+    StorageLocation    = storage_location;
+    Unit               = unit;
+    Quantity           = quantity;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

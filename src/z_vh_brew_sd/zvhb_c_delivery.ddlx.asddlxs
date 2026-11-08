@@ -1,0 +1,80 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Delivery',
+  typeNamePlural: 'Deliveries',
+  title: { type: #STANDARD, value: 'Delivery' },
+  description: { type: #STANDARD, value: 'CustomerName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Delivery', direction: #DESC }] }]
+annotate entity ZVHB_C_Delivery with
+{
+  @UI.facet: [
+    { id: 'Status',  purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Status', position: 10 },
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Delivery', position: 10 },
+    { id: 'Items',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Picked Items', position: 20, targetElement: '_Item' },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  DeliveryUUID;
+
+  @UI.hidden: true
+  SalesOrderUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'postGoodsIssue', label: 'Post Goods Issue' },
+    { type: #FOR_ACTION, dataAction: 'createInvoice', label: 'Create Invoice' }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'postGoodsIssue', label: 'Post Goods Issue' },
+    { type: #FOR_ACTION, dataAction: 'createInvoice', label: 'Create Invoice' }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  Delivery;
+
+  @UI.lineItem: [{ position: 15, importance: #HIGH, criticality: 'StatusCriticality' }]
+  @UI.dataPoint: { qualifier: 'Status', title: 'Status', criticality: 'StatusCriticality' }
+  @UI.selectionField: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.hidden: true
+  StatusCriticality;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  SalesOrder;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Customer;
+
+  @UI.hidden: true
+  CustomerName;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  GoodsIssueDate;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

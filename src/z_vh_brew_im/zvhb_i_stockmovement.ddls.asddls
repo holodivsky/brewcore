@@ -20,6 +20,7 @@ define view entity ZVHB_I_StockMovement
       @Semantics.quantity.unitOfMeasure: 'Unit'
       case when movement_type = '101' or movement_type = '262' or movement_type = '312'
              or movement_type = '552' or movement_type = '561' or movement_type = '602'
+             or movement_type = '653'
            then quantity
            else quantity * -1
       end                                          as Quantity

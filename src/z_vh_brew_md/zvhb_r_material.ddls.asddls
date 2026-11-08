@@ -31,6 +31,12 @@ define root view entity ZVHB_R_Material
       @EndUserText.label: 'Active'
       is_active             as IsActive,
 
+      @EndUserText: { label: 'Returnable Packaging', quickInfo: 'Empties with a deposit that the material is sold in' }
+      returnable_packaging  as ReturnablePackaging,
+
+      @EndUserText.label: 'Units per Package'
+      units_per_package     as UnitsPerPackage,
+
       @Semantics.user.createdBy: true
       created_by            as CreatedBy,
 

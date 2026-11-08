@@ -1,0 +1,15 @@
+projection;
+strict ( 2 );
+
+define behavior for ZVHB_C_Delivery alias Delivery
+{
+  use action postGoodsIssue;
+  use action createInvoice;
+
+  use association _Item;
+}
+
+define behavior for ZVHB_C_DeliveryItem alias Item
+{
+  use association _Delivery;
+}

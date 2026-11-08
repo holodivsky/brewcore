@@ -1,0 +1,14 @@
+projection;
+strict ( 2 );
+
+define behavior for ZVHB_C_BillingDocument alias BillingDocument
+{
+  use action returnEmpties;
+
+  use association _Item;
+}
+
+define behavior for ZVHB_C_BillingDocumentItem alias Item
+{
+  use association _BillingDocument;
+}

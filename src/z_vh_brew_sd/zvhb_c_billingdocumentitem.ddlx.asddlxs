@@ -1,0 +1,56 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Billing Item',
+  typeNamePlural: 'Billing Items',
+  title: { type: #STANDARD, value: 'Item' },
+  description: { type: #STANDARD, value: 'MaterialName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Item', direction: #ASC }] }]
+annotate entity ZVHB_C_BillingDocumentItem with
+{
+  @UI.facet: [
+    { id: 'Item', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Item', position: 10 }
+  ]
+  @UI.hidden: true
+  BillingDocumentUUID;
+
+  @UI.hidden: true
+  ItemUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Item;
+
+  @UI.lineItem: [{ position: 20, importance: #MEDIUM }]
+  @UI.identification: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_ONLY
+  ItemCategory;
+
+  @UI.hidden: true
+  ItemCategoryName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  Quantity;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  NetAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

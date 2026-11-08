@@ -1,0 +1,20 @@
+@EndUserText.label: 'BrewCore: Sales UI service'
+define service ZVHB_UI_SALESORDER
+{
+  expose ZVHB_C_SalesOrder          as SalesOrders;
+  expose ZVHB_C_SalesOrderItem      as SalesOrderItems;
+  expose ZVHB_C_Delivery            as Deliveries;
+  expose ZVHB_C_DeliveryItem        as DeliveryItems;
+  expose ZVHB_C_BillingDocument     as BillingDocuments;
+  expose ZVHB_C_BillingDocumentItem as BillingDocumentItems;
+  expose ZVHB_C_EmptiesBalance      as EmptiesBalances;
+
+  expose ZVHB_I_AvailableToPromise  as AvailableToPromise;
+  expose ZVHB_I_CustomerVH          as Customers;
+  expose ZVHB_I_MaterialVH          as Materials;
+  expose ZVHB_I_DistrChannelVH      as DistributionChannels;
+  expose ZVHB_I_SalesOrderStatusVH  as SalesOrderStatuses;
+  expose ZVHB_I_DeliveryStatusVH    as DeliveryStatuses;
+  expose ZVHB_I_BillingTypeVH       as BillingTypes;
+  expose ZVHB_I_ItemCategoryVH      as ItemCategories;
+}

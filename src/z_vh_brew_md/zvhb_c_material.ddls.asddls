@@ -29,6 +29,11 @@ define root view entity ZVHB_C_Material
       ShelfLifeDays,
       IsBatchManaged,
       IsActive,
+
+      @Consumption.valueHelpDefinition: [{ entity: { name: 'ZVHB_I_MaterialVH', element: 'Material' } }]
+      ReturnablePackaging,
+      UnitsPerPackage,
+
       CreatedBy,
       CreatedAt,
       LastChangedBy,

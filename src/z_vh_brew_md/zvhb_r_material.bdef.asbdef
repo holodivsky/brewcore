@@ -33,6 +33,7 @@ etag master LocalLastChangedAt
   validation validateMaterialType on save { create; field MaterialType; }
   validation validateBaseUnit on save { create; }
   validation validateBatchManagement on save { create; field MaterialType, IsBatchManaged, ShelfLifeDays; }
+  validation validatePackaging on save { create; field ReturnablePackaging, UnitsPerPackage; }
 
   draft action ( features : instance ) Edit;
   draft action Activate optimized;
@@ -44,6 +45,7 @@ etag master LocalLastChangedAt
     validation validateMaterialType;
     validation validateBaseUnit;
     validation validateBatchManagement;
+    validation validatePackaging;
     validation Unit~validateConversion;
     validation Plant~validatePlant;
     validation Plant~validateStockLevels;
@@ -63,6 +65,8 @@ etag master LocalLastChangedAt
     ShelfLifeDays      = shelf_life_days;
     IsBatchManaged     = is_batch_managed;
     IsActive           = is_active;
+    ReturnablePackaging = returnable_packaging;
+    UnitsPerPackage    = units_per_package;
     CreatedBy          = created_by;
     CreatedAt          = created_at;
     LastChangedBy      = last_changed_by;

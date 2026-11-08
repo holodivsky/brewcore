@@ -277,6 +277,18 @@
      <MSGNR>045</MSGNR>
      <TEXT>Capacity of tank &amp;1 must be greater than zero</TEXT>
     </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>046</MSGNR>
+     <TEXT>Returnable packaging &amp;1 must be an active empties material</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MD</ARBGB>
+     <MSGNR>047</MSGNR>
+     <TEXT>Enter how many units fit into returnable packaging &amp;1</TEXT>
+    </T100>
    </T100>
    <I18N_LANGS>
     <LANGU/>

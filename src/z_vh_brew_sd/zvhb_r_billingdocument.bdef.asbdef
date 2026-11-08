@@ -1,0 +1,72 @@
+managed implementation in class zbp_vhb_r_billingdocument unique;
+strict ( 2 );
+
+define behavior for ZVHB_R_BillingDocument alias BillingDocument
+persistent table zvhb_billhdr
+lock master
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  // Invoices are created by the delivery, credit memos for empties by the static action returnEmpties;
+  // a billing document never changes afterwards
+  create ( authorization : global );
+  internal update;
+
+  association _Item { create; }
+
+  field ( numbering : managed, readonly ) BillingDocumentUUID;
+  field ( readonly ) BillingDocument, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( readonly : update ) BillingType, Customer, SalesOrder, Delivery, BillingDate, Currency, NetAmount,
+                              DepositAmount, TotalAmount;
+
+  // FR-SD-05: returned empties are received into stock and credited at the deposit rate
+  static factory action returnEmpties parameter ZVHB_D_EmptiesReturn [1];
+
+  determination setNumber on save { create; }
+
+  mapping for zvhb_billhdr
+  {
+    BillingDocumentUUID = bill_uuid;
+    BillingDocument     = billing_document;
+    BillingType         = billing_type;
+    Customer            = customer;
+    SalesOrder          = sales_order;
+    Delivery            = delivery;
+    BillingDate         = billing_date;
+    Currency            = currency;
+    NetAmount           = net_amount;
+    DepositAmount       = deposit_amount;
+    TotalAmount         = total_amount;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_BillingDocumentItem alias Item
+persistent table zvhb_billitm
+lock dependent by _BillingDocument
+authorization dependent by _BillingDocument
+etag master LocalLastChangedAt
+{
+  association _BillingDocument;
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) BillingDocumentUUID, LocalLastChangedAt;
+
+  mapping for zvhb_billitm
+  {
+    BillingDocumentUUID = bill_uuid;
+    ItemUUID            = item_uuid;
+    Item                = item;
+    ItemCategory        = item_category;
+    Material            = material;
+    Unit                = unit;
+    Quantity            = quantity;
+    Currency            = currency;
+    NetAmount           = net_amount;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}

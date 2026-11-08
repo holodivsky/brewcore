@@ -1,0 +1,88 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Billing Document',
+  typeNamePlural: 'Billing Documents',
+  title: { type: #STANDARD, value: 'BillingDocument' },
+  description: { type: #STANDARD, value: 'CustomerName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'BillingDocument', direction: #DESC }] }]
+annotate entity ZVHB_C_BillingDocument with
+{
+  @UI.facet: [
+    { id: 'Total',   purpose: #HEADER,   type: #DATAPOINT_REFERENCE, targetQualifier: 'Total', position: 10 },
+    { id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Billing Document', position: 10 },
+    { id: 'Items',   purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Items', position: 20, targetElement: '_Item' },
+    { id: 'Admin',   purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  BillingDocumentUUID;
+
+  @UI.lineItem: [
+    { position: 10, importance: #HIGH },
+    { type: #FOR_ACTION, dataAction: 'returnEmpties', label: 'Return Empties' }
+  ]
+  @UI.identification: [{ position: 10 }]
+  @UI.selectionField: [{ position: 10 }]
+  BillingDocument;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_ONLY
+  BillingType;
+
+  @UI.hidden: true
+  BillingTypeName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Customer;
+
+  @UI.hidden: true
+  CustomerName;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  SalesOrder;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM }]
+  @UI.identification: [{ position: 50 }]
+  Delivery;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 60 }]
+  BillingDate;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  @UI.identification: [{ position: 70 }]
+  NetAmount;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  @UI.identification: [{ position: 80 }]
+  DepositAmount;
+
+  @UI.lineItem: [{ position: 90, importance: #HIGH }]
+  @UI.identification: [{ position: 90 }]
+  @UI.dataPoint: { qualifier: 'Total', title: 'Total' }
+  TotalAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

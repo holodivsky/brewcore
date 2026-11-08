@@ -1,0 +1,133 @@
+managed implementation in class zbp_vhb_r_salesorder unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_SalesOrder alias SalesOrder
+persistent table zvhb_sohdr
+draft table zvhb_sohdr_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _Item { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) SalesOrderUUID;
+  field ( readonly ) SalesOrder, OrderDate, Currency, NetAmount, DepositAmount, TotalAmount, Status, StatusCriticality,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Customer, DistributionChannel, RequestedDate;
+
+  // Credit block is released by hand; the delivery takes the confirmed quantities
+  action ( features : instance ) releaseCredit result [1] $self;
+  action ( features : instance ) createDelivery result [1] $self;
+
+  // Called by the delivery when it is invoiced; not exposed in the app
+  action ( features : instance ) setInvoiced result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination setCurrency on modify { field Customer; }
+  determination repriceItems on modify { field DistributionChannel; }
+  determination setNumber on save { create; }
+  determination checkCredit on save { create; field Customer, TotalAmount; }
+
+  validation validateCustomer on save { create; field Customer; }
+  validation validateChannel on save { create; field DistributionChannel; }
+  validation validateRequestedDate on save { create; field RequestedDate; }
+  validation validateItems on save { create; field TotalAmount; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateCustomer;
+    validation validateChannel;
+    validation validateRequestedDate;
+    validation validateItems;
+    validation Item~validateItem;
+    validation Item~checkAvailability;
+  }
+
+  side effects
+  {
+    field Customer affects field Currency;
+    field DistributionChannel affects entity _Item, field NetAmount, field DepositAmount, field TotalAmount;
+  }
+
+  mapping for zvhb_sohdr
+  {
+    SalesOrderUUID      = so_uuid;
+    SalesOrder          = sales_order;
+    Customer            = customer;
+    DistributionChannel = distr_channel;
+    OrderDate           = order_date;
+    RequestedDate       = requested_date;
+    Currency            = currency;
+    NetAmount           = net_amount;
+    DepositAmount       = deposit_amount;
+    TotalAmount         = total_amount;
+    Status              = status;
+    CreatedBy           = created_by;
+    CreatedAt           = created_at;
+    LastChangedBy       = last_changed_by;
+    LastChangedAt       = last_changed_at;
+    LocalLastChangedAt  = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_SalesOrderItem alias Item
+persistent table zvhb_soitm
+draft table zvhb_soitm_d
+lock dependent by _SalesOrder
+authorization dependent by _SalesOrder
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _SalesOrder { with draft; }
+
+  field ( numbering : managed, readonly ) ItemUUID;
+  field ( readonly ) SalesOrderUUID, Item, ItemCategory, ParentItemUUID, Unit, ConfirmedQuantity, Currency, BasePrice,
+                     DiscountPercent, NetAmount, LocalLastChangedAt;
+  field ( mandatory, features : instance ) Material, Quantity;
+
+  // FR-SD-01 and FR-SD-02: price, discount, deposit line and confirmed quantity follow material and quantity
+  determination setItemDefaults on modify { create; }
+  determination determinePrice on modify { field Material, Quantity; }
+  determination calculateTotals on modify { create; delete; field NetAmount; }
+
+  validation validateItem on save { create; field Material, Quantity; }
+  validation checkAvailability on save { create; field Quantity, ConfirmedQuantity; }
+
+  side effects
+  {
+    field Material affects field Unit, field BasePrice, field DiscountPercent, field NetAmount, field ConfirmedQuantity,
+                           entity _SalesOrder;
+    field Quantity affects field BasePrice, field DiscountPercent, field NetAmount, field ConfirmedQuantity,
+                           entity _SalesOrder;
+  }
+
+  mapping for zvhb_soitm
+  {
+    SalesOrderUUID     = so_uuid;
+    ItemUUID           = item_uuid;
+    Item               = item;
+    ItemCategory       = item_category;
+    ParentItemUUID     = parent_item_uuid;
+    Material           = material;
+    Unit               = unit;
+    Quantity           = quantity;
+    ConfirmedQuantity  = confirmed_quantity;
+    Currency           = currency;
+    BasePrice          = base_price;
+    DiscountPercent    = discount_percent;
+    NetAmount          = net_amount;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

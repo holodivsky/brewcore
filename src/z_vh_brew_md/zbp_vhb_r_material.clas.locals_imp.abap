@@ -48,6 +48,10 @@ CLASS lhc_material DEFINITION INHERITING FROM cl_abap_behavior_handler FRIENDS l
     METHODS validateBatchManagement FOR VALIDATE ON SAVE
       IMPORTING keys FOR Material~validateBatchManagement.
 
+    "! Returnable packaging is an active empties material, and the number of units per package is set
+    METHODS validatePackaging FOR VALIDATE ON SAVE
+      IMPORTING keys FOR Material~validatePackaging.
+
     "! Sets the active flag and returns the changed materials
     METHODS set_status
       IMPORTING
@@ -242,6 +246,47 @@ CLASS lhc_material IMPLEMENTATION.
                                                                     severity = if_abap_behv_message=>severity-error
                                                                     v1       = material-BaseUnit ) )
                       %element-BaseUnit = if_abap_behv=>mk-on ) TO reported-material.
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD validatePackaging.
+    CONSTANTS c_empties TYPE zvhb_material_type VALUE 'LEER'.
+
+    READ ENTITIES OF zvhb_r_material IN LOCAL MODE
+      ENTITY Material
+        FIELDS ( ReturnablePackaging UnitsPerPackage ) WITH CORRESPONDING #( keys )
+      RESULT DATA(materials).
+
+    READ ENTITIES OF zvhb_r_material IN LOCAL MODE
+      ENTITY Material
+        FIELDS ( MaterialType IsActive )
+        WITH VALUE #( FOR m IN materials WHERE ( ReturnablePackaging IS NOT INITIAL )
+                      ( Material = m-ReturnablePackaging ) )
+      RESULT DATA(packages).
+
+    LOOP AT materials INTO DATA(material).
+      APPEND VALUE #( %tky = material-%tky %state_area = 'PACKAGING' ) TO reported-material.
+      IF material-ReturnablePackaging IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      DATA(package) = VALUE #( packages[ KEY entity Material = material-ReturnablePackaging ] OPTIONAL ).
+      DATA(number) = COND symsgno( WHEN package-MaterialType <> c_empties OR package-IsActive = abap_false
+                                   THEN '046'
+                                   WHEN material-UnitsPerPackage <= 0
+                                   THEN '047' ).
+      IF number IS INITIAL.
+        CONTINUE.
+      ENDIF.
+
+      APPEND VALUE #( %tky = material-%tky ) TO failed-material.
+      APPEND VALUE #( %tky                         = material-%tky
+                      %state_area                  = 'PACKAGING'
+                      %msg                         = new_message( id       = c_msgid
+                                                                  number   = number
+                                                                  severity = if_abap_behv_message=>severity-error
+                                                                  v1       = material-ReturnablePackaging )
+                      %element-ReturnablePackaging = if_abap_behv=>mk-on ) TO reported-material.
     ENDLOOP.
   ENDMETHOD.
 
