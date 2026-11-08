@@ -75,6 +75,22 @@ CLASS lcl_pricing DEFINITION FINAL FRIENDS ltc_sales_order.
       IMPORTING
         orders TYPE tt_orders.
 
+    TYPES tt_updates TYPE TABLE FOR UPDATE zvhb_r_salesorder\\item.
+    TYPES tt_creates TYPE TABLE FOR CREATE zvhb_r_salesorder\\salesorder\_item.
+    TYPES tt_deletes TYPE TABLE FOR DELETE zvhb_r_salesorder\\item.
+
+    "! Creates, changes or deletes the deposit item of one product item
+    CLASS-METHODS plan_deposit
+      IMPORTING
+        order     TYPE ty_order
+        item      TYPE ty_item
+        items     TYPE tt_items
+        confirmed TYPE zvhb_quantity
+      CHANGING
+        updates   TYPE tt_updates
+        creates   TYPE tt_creates
+        deletes   TYPE tt_deletes.
+
     "! Base price of the channel valid today, reduced by the highest quantity scale that is reached
     CLASS-METHODS price_of
       IMPORTING
@@ -122,8 +138,6 @@ CLASS lcl_pricing IMPLEMENTATION.
     DATA deposit_creates TYPE TABLE FOR CREATE zvhb_r_salesorder\\salesorder\_item.
     DATA deposit_deletes TYPE TABLE FOR DELETE zvhb_r_salesorder\\item.
     DATA used TYPE HASHED TABLE OF ty_used WITH UNIQUE KEY material.
-    DATA deposit TYPE ty_item.
-    DATA deposit_amount TYPE zvhb_amount.
 
     IF orders IS INITIAL.
       RETURN.
@@ -171,55 +185,13 @@ CLASS lcl_pricing IMPLEMENTATION.
                                                      NetAmount         = if_abap_behv=>mk-on
                                                      ConfirmedQuantity = if_abap_behv=>mk-on ) ) TO updates.
 
-        CLEAR deposit.
-        LOOP AT items INTO DATA(candidate) WHERE ParentItemUUID = item-ItemUUID.
-          deposit = candidate.
-          EXIT.
-        ENDLOOP.
-        DATA(packaging) = packaging_of( item-Material ).
-        IF packaging IS INITIAL OR item-Quantity <= 0.
-          IF deposit IS NOT INITIAL.
-            APPEND VALUE #( %tky = deposit-%tky ) TO deposit_deletes.
-          ENDIF.
-          CONTINUE.
-        ENDIF.
-
-        DATA(package_count) = packages( quantity = item-Quantity units = packaging-units ).
-        deposit_amount = package_count * packaging-rate.
-        DATA(confirmed_packages) = packages( quantity = confirmed units = packaging-units ).
-
-        IF deposit IS INITIAL.
-          " The deposit item follows its product item as a sub-item: 00010 gets 00011
-          APPEND VALUE #( %tky    = order-%tky
-                          %target = VALUE #( ( %cid              = |D{ item-ItemUUID }|
-                                               %is_draft         = order-%is_draft
-                                               Item              = item-Item + 1
-                                               ItemCategory      = lif_sales=>item_category-deposit
-                                               ParentItemUUID    = item-ItemUUID
-                                               Material          = packaging-material
-                                               Unit              = packaging-unit
-                                               Quantity          = package_count
-                                               ConfirmedQuantity = confirmed_packages
-                                               Currency          = order-Currency
-                                               BasePrice         = packaging-rate
-                                               NetAmount         = deposit_amount ) ) ) TO deposit_creates.
-        ELSE.
-          APPEND VALUE #( %tky              = deposit-%tky
-                          Material          = packaging-material
-                          Unit              = packaging-unit
-                          Quantity          = package_count
-                          ConfirmedQuantity = confirmed_packages
-                          Currency          = order-Currency
-                          BasePrice         = packaging-rate
-                          NetAmount         = deposit_amount
-                          %control          = VALUE #( Material          = if_abap_behv=>mk-on
-                                                       Unit              = if_abap_behv=>mk-on
-                                                       Quantity          = if_abap_behv=>mk-on
-                                                       ConfirmedQuantity = if_abap_behv=>mk-on
-                                                       Currency          = if_abap_behv=>mk-on
-                                                       BasePrice         = if_abap_behv=>mk-on
-                                                       NetAmount         = if_abap_behv=>mk-on ) ) TO updates.
-        ENDIF.
+        plan_deposit( EXPORTING order     = order
+                                item      = item
+                                items     = items
+                                confirmed = confirmed
+                      CHANGING  updates   = updates
+                                creates   = deposit_creates
+                                deletes   = deposit_deletes ).
       ENDLOOP.
 
       " Deposit items whose product item was deleted
@@ -243,6 +215,60 @@ CLASS lcl_pricing IMPLEMENTATION.
         FIELDS ( Item ItemCategory ParentItemUUID Material Unit Quantity ConfirmedQuantity Currency BasePrice
                  NetAmount )
         WITH deposit_creates.
+  ENDMETHOD.
+
+  METHOD plan_deposit.
+    DATA deposit TYPE ty_item.
+    DATA deposit_amount TYPE zvhb_amount.
+
+    LOOP AT items INTO DATA(candidate) WHERE ParentItemUUID = item-ItemUUID.
+      deposit = candidate.
+      EXIT.
+    ENDLOOP.
+    DATA(packaging) = packaging_of( item-Material ).
+    IF packaging IS INITIAL OR item-Quantity <= 0.
+      IF deposit IS NOT INITIAL.
+        APPEND VALUE #( %tky = deposit-%tky ) TO deletes.
+      ENDIF.
+      RETURN.
+    ENDIF.
+
+    DATA(package_count) = packages( quantity = item-Quantity units = packaging-units ).
+    deposit_amount = package_count * packaging-rate.
+    DATA(confirmed_packages) = packages( quantity = confirmed units = packaging-units ).
+
+    IF deposit IS INITIAL.
+      " The deposit item follows its product item as a sub-item: 00010 gets 00011
+      APPEND VALUE #( %tky    = order-%tky
+                      %target = VALUE #( ( %cid              = |D{ item-ItemUUID }|
+                                           %is_draft         = order-%is_draft
+                                           Item              = item-Item + 1
+                                           ItemCategory      = lif_sales=>item_category-deposit
+                                           ParentItemUUID    = item-ItemUUID
+                                           Material          = packaging-material
+                                           Unit              = packaging-unit
+                                           Quantity          = package_count
+                                           ConfirmedQuantity = confirmed_packages
+                                           Currency          = order-Currency
+                                           BasePrice         = packaging-rate
+                                           NetAmount         = deposit_amount ) ) ) TO creates.
+    ELSE.
+      APPEND VALUE #( %tky              = deposit-%tky
+                      Material          = packaging-material
+                      Unit              = packaging-unit
+                      Quantity          = package_count
+                      ConfirmedQuantity = confirmed_packages
+                      Currency          = order-Currency
+                      BasePrice         = packaging-rate
+                      NetAmount         = deposit_amount
+                      %control          = VALUE #( Material          = if_abap_behv=>mk-on
+                                                   Unit              = if_abap_behv=>mk-on
+                                                   Quantity          = if_abap_behv=>mk-on
+                                                   ConfirmedQuantity = if_abap_behv=>mk-on
+                                                   Currency          = if_abap_behv=>mk-on
+                                                   BasePrice         = if_abap_behv=>mk-on
+                                                   NetAmount         = if_abap_behv=>mk-on ) ) TO updates.
+    ENDIF.
   ENDMETHOD.
 
   METHOD price_of.
