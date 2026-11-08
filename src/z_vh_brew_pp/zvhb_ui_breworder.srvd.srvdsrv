@@ -1,0 +1,14 @@
+@EndUserText.label: 'BrewCore: Brew order UI service'
+define service ZVHB_UI_BREWORDER
+{
+  expose ZVHB_C_BrewOrder          as BrewOrders;
+  expose ZVHB_C_BrewOrderComponent as BrewOrderComponents;
+  expose ZVHB_C_BrewOrderMovement  as BrewOrderMovements;
+
+  expose ZVHB_I_BeerRecipeVH       as Beers;
+  expose ZVHB_I_TankVH             as Tanks;
+  expose ZVHB_I_MaterialVH         as Materials;
+  expose ZVHB_I_PlantVH            as Plants;
+  expose ZVHB_I_StorageLocVH       as StorageLocations;
+  expose ZVHB_I_BrewStatusVH       as BrewStatuses;
+}

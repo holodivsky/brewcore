@@ -49,6 +49,7 @@ CLASS lhc_material_document DEFINITION INHERITING FROM cl_abap_behavior_handler 
         ReversedItem      TYPE zvhb_matdoc_item,
         PurchaseOrder     TYPE zvhb_purch_order,
         PurchaseOrderItem TYPE zvhb_po_item,
+        BrewOrder         TYPE zvhb_brew_order,
       END OF ty_item,
       tt_items TYPE STANDARD TABLE OF ty_item WITH EMPTY KEY.
 
@@ -250,7 +251,8 @@ CLASS lhc_material_document IMPLEMENTATION.
                           Unit              = material-BaseUnit
                           Quantity          = movement_data-Quantity
                           PurchaseOrder     = movement_data-PurchaseOrder
-                          PurchaseOrderItem = movement_data-PurchaseOrderItem ) ) ).
+                          PurchaseOrderItem = movement_data-PurchaseOrderItem
+                          BrewOrder         = movement_data-BrewOrder ) ) ).
   ENDMETHOD.
 
   METHOD check_master_data.
@@ -470,7 +472,7 @@ CLASS lhc_material_document IMPLEMENTATION.
                         ReversedDocument = header-ReversedDocument ) )
         CREATE BY \_Item
         FIELDS ( MovementType Material Plant StorageLocation ReceivingLocation Batch Unit Quantity ReversedItem
-                 PurchaseOrder PurchaseOrderItem )
+                 PurchaseOrder PurchaseOrderItem BrewOrder )
         WITH VALUE #( ( %cid_ref = 'DOCUMENT'
                         %target  = VALUE #( FOR item IN items INDEX INTO i
                                             ( %cid              = |ITEM{ i }|
@@ -484,7 +486,8 @@ CLASS lhc_material_document IMPLEMENTATION.
                                               Quantity          = item-Quantity
                                               ReversedItem      = item-ReversedItem
                                               PurchaseOrder     = item-PurchaseOrder
-                                              PurchaseOrderItem = item-PurchaseOrderItem ) ) ) )
+                                              PurchaseOrderItem = item-PurchaseOrderItem
+                                              BrewOrder         = item-BrewOrder ) ) ) )
       MAPPED DATA(created).
 
     result = created-materialdocument[ 1 ]-%pid.

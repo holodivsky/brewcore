@@ -1,0 +1,47 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Goods Movement',
+  typeNamePlural: 'Goods Movements',
+  title: { type: #STANDARD, value: 'MaterialDocument' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'MaterialDocument', direction: #ASC }] }]
+annotate entity ZVHB_C_BrewOrderMovement with
+{
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  MaterialDocument;
+
+  @UI.hidden: true
+  Item;
+
+  @UI.hidden: true
+  BrewOrder;
+
+  @UI.lineItem: [{ position: 20, importance: #MEDIUM }]
+  PostingDate;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.textArrangement: #TEXT_LAST
+  MovementType;
+
+  @UI.hidden: true
+  MovementTypeName;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  Batch;
+
+  @UI.lineItem: [{ position: 60, importance: #HIGH }]
+  Quantity;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 70, importance: #MEDIUM }]
+  StorageLocation;
+}

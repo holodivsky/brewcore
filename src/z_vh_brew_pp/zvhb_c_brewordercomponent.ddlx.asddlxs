@@ -1,0 +1,47 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Raw Material',
+  typeNamePlural: 'Raw Materials',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'Item' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Item', direction: #ASC }] }]
+annotate entity ZVHB_C_BrewOrderComponent with
+{
+  @UI.facet: [{ id: 'Component', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Raw Material', position: 10 }]
+
+  @UI.hidden: true
+  BrewOrderUUID;
+
+  @UI.hidden: true
+  ComponentUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Item;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  Quantity;
+
+  @UI.hidden: true
+  Unit;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM }]
+  @UI.identification: [{ position: 40 }]
+  StorageLocation;
+
+  @UI.identification: [{ position: 50 }]
+  Plant;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

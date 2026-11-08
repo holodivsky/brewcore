@@ -110,6 +110,15 @@ CLASS zcl_vhb_demo_data DEFINITION
       RETURNING
         VALUE(result) TYPE abap_boolean.
 
+    "! Two Pils brews: 50 hl run from release through mashing and boiling into tank FT-01;
+    "! 200 hl in FT-02 stay new, their release fails because the yeast is not enough
+    METHODS create_brew_orders.
+
+    "! Finishes the cleaning of a tank that an earlier run left in CIP, so fermentation can start
+    METHODS prepare_tank
+      IMPORTING
+        tank TYPE zvhb_tank.
+
     "! Writes the messages of a RAP response structure (REPORTED) to the console
     METHODS write_messages
       IMPORTING
@@ -132,6 +141,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_tanks( ).
     create_initial_stock( ).
     create_procurement( ).
+    create_brew_orders( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -779,6 +789,137 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
                         THEN |Goods of purchase order { order-purchase_order } received|
                         ELSE |Goods of purchase order { order-purchase_order } already received, skipped| ) ).
     result = abap_true.
+  ENDMETHOD.
+
+  METHOD create_brew_orders.
+    DATA failed TYPE RESPONSE FOR FAILED EARLY zvhb_r_breworder.
+    DATA reported TYPE RESPONSE FOR REPORTED EARLY zvhb_r_breworder.
+    DATA commit_failed TYPE RESPONSE FOR FAILED LATE zvhb_r_breworder.
+    DATA commit_reported TYPE RESPONSE FOR REPORTED LATE zvhb_r_breworder.
+
+    SELECT SINGLE @abap_true FROM zvhb_brewhdr INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Brew orders exist, creation skipped| ).
+    ELSE.
+      DATA(today) = cl_abap_context_info=>get_system_date( ).
+
+      " The components are copied from the active recipe and scaled to the planned quantity
+      MODIFY ENTITIES OF zvhb_r_breworder
+        ENTITY BrewOrder
+          CREATE FIELDS ( Material PlannedQuantity Tank PlannedStart )
+          WITH VALUE #( ( %cid = 'BREW1' Material = 'PILS' PlannedQuantity = 50  Tank = 'FT-01' PlannedStart = today )
+                        ( %cid = 'BREW2' Material = 'PILS' PlannedQuantity = 200 Tank = 'FT-02' PlannedStart = today + 3 ) )
+        FAILED failed
+        REPORTED reported.
+
+      IF failed IS NOT INITIAL.
+        write_messages( reported ).
+        ROLLBACK ENTITIES.
+        RETURN.
+      ENDIF.
+
+      COMMIT ENTITIES RESPONSE OF zvhb_r_breworder
+        FAILED commit_failed
+        REPORTED commit_reported.
+
+      IF commit_failed IS NOT INITIAL.
+        out->write( |Brew orders not saved:| ).
+        write_messages( commit_reported ).
+        RETURN.
+      ENDIF.
+    ENDIF.
+
+    " The first brew runs in FT-01; a second run continues with the phases that are still open
+    SELECT SINGLE brew_uuid, status FROM zvhb_brewhdr
+      WHERE tank = 'FT-01'
+        AND planned_quantity = 50
+      INTO @DATA(first).
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+    prepare_tank( 'FT-01' ).
+
+    DATA(phases) = VALUE string_table( ( `release` ) ( `startMashing` ) ( `startBoiling` ) ( `startFermentation` ) ).
+    DATA(phases_done) = SWITCH i( first-status WHEN 'NEW'  THEN 0
+                                               WHEN 'REL'  THEN 1
+                                               WHEN 'MASH' THEN 2
+                                               WHEN 'BOIL' THEN 3
+                                               ELSE lines( phases ) ).
+
+    " Each phase is saved on its own, as the brewer would do it in the app
+    LOOP AT phases INTO DATA(phase) FROM phases_done + 1.
+      CASE phase.
+        WHEN `release`.
+          MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
+            EXECUTE release FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+        WHEN `startMashing`.
+          MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
+            EXECUTE startMashing FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+        WHEN `startBoiling`.
+          MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
+            EXECUTE startBoiling FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+        WHEN `startFermentation`.
+          MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
+            EXECUTE startFermentation FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+      ENDCASE.
+
+      write_messages( reported ).
+      IF failed IS NOT INITIAL.
+        ROLLBACK ENTITIES.
+        RETURN.
+      ENDIF.
+
+      COMMIT ENTITIES RESPONSE OF zvhb_r_breworder
+        FAILED commit_failed
+        REPORTED commit_reported.
+
+      IF commit_failed IS NOT INITIAL.
+        out->write( |Phase { phase } not saved:| ).
+        write_messages( commit_reported ).
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+
+    SELECT brew_order, planned_quantity, tank, status FROM zvhb_brewhdr
+      ORDER BY brew_order
+      INTO TABLE @DATA(orders).
+    LOOP AT orders INTO DATA(order).
+      out->write( |Brew order { order-brew_order }: { order-planned_quantity NUMBER = USER } hl Pils in { order-tank }, | &&
+                  |status { order-status }| ).
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD prepare_tank.
+    SELECT SINGLE status FROM zvhb_ftank
+      WHERE tank = @tank
+      INTO @DATA(status).
+    IF status <> 'CIP'.
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_fermentationtank
+      ENTITY Tank
+        EXECUTE finishCleaning FROM VALUE #( ( Tank = tank ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_fermentationtank
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+
+    IF commit_failed IS NOT INITIAL.
+      write_messages( commit_reported ).
+      RETURN.
+    ENDIF.
+
+    out->write( |Cleaning of tank { tank } finished| ).
   ENDMETHOD.
 
   METHOD write_messages.

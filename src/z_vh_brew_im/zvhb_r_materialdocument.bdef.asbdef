@@ -38,7 +38,7 @@ authorization dependent by _MaterialDocument
   association _MaterialDocument;
 
   field ( readonly ) MaterialDocument, Item, MovementType, Material, Plant, StorageLocation, ReceivingLocation,
-                     Batch, Unit, Quantity, ReversedItem, PurchaseOrder, PurchaseOrderItem;
+                     Batch, Unit, Quantity, ReversedItem, PurchaseOrder, PurchaseOrderItem, BrewOrder;
 
   mapping for zvhb_mdocitm
   {
@@ -55,5 +55,6 @@ authorization dependent by _MaterialDocument
     ReversedItem      = reversed_item;
     PurchaseOrder     = purchase_order;
     PurchaseOrderItem = purchase_order_item;
+    BrewOrder         = brew_order;
   }
 }

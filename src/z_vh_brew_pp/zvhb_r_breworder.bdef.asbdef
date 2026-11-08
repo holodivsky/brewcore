@@ -1,0 +1,136 @@
+managed implementation in class zbp_vhb_r_breworder unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_BrewOrder alias BrewOrder
+persistent table zvhb_brewhdr
+draft table zvhb_brewhdr_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _Component { create ( features : instance ); with draft; }
+
+  field ( numbering : managed, readonly ) BrewOrderUUID;
+  field ( readonly ) BrewOrder, Plant, RecipeUUID, VersionUUID, RecipeVersion, Unit, PlannedEnd, FermentationDays,
+                     MaturationDays, Status, StatusCriticality, MashingStart, BoilingStart, FermentationStart,
+                     MaturationStart, FillingDate, FilledQuantity,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Material, PlannedQuantity, Tank, PlannedStart;
+
+  // Release checks raw materials and tank; each phase is one action with its actual date
+  action ( features : instance ) release result [1] $self;
+  action ( features : instance ) startMashing result [1] $self;
+  action ( features : instance ) startBoiling result [1] $self;
+  action ( features : instance ) startFermentation result [1] $self;
+  action ( features : instance ) startMaturation result [1] $self;
+  action ( features : instance ) fill parameter ZVHB_D_BrewFilling result [1] $self;
+
+  determination setDefaults on modify { create; }
+  determination copyRecipe on modify { field Material, PlannedQuantity; }
+  determination setPlannedEnd on modify { field PlannedStart; }
+  determination setNumber on save { create; }
+
+  validation validateBeer on save { create; field Material; }
+  validation validateQuantity on save { create; field PlannedQuantity, Tank; }
+  validation validateTank on save { create; field Tank; }
+  validation validateStart on save { create; field PlannedStart; }
+  validation validateComponents on save { create; }
+
+  draft action ( features : instance ) Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateBeer;
+    validation validateQuantity;
+    validation validateTank;
+    validation validateStart;
+    validation validateComponents;
+    validation Component~validateComponent;
+  }
+
+  side effects
+  {
+    field Material affects field RecipeVersion, field Unit, field FermentationDays, field MaturationDays,
+                           field PlannedEnd, entity _Component;
+    field PlannedQuantity affects entity _Component;
+    field PlannedStart affects field PlannedEnd;
+  }
+
+  mapping for zvhb_brewhdr
+  {
+    BrewOrderUUID      = brew_uuid;
+    BrewOrder          = brew_order;
+    Material           = material;
+    Plant              = plant;
+    RecipeUUID         = recipe_uuid;
+    VersionUUID        = version_uuid;
+    RecipeVersion      = recipe_version;
+    Tank               = tank;
+    Unit               = unit;
+    PlannedQuantity    = planned_quantity;
+    PlannedStart       = planned_start;
+    PlannedEnd         = planned_end;
+    FermentationDays   = fermentation_days;
+    MaturationDays     = maturation_days;
+    Status             = status;
+    MashingStart       = mashing_start;
+    BoilingStart       = boiling_start;
+    FermentationStart  = fermentation_start;
+    MaturationStart    = maturation_start;
+    FillingDate        = filling_date;
+    FilledQuantity     = filled_quantity;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZVHB_R_BrewOrderComponent alias Component
+persistent table zvhb_brewcmp
+draft table zvhb_brewcmp_d
+lock dependent by _BrewOrder
+authorization dependent by _BrewOrder
+etag master LocalLastChangedAt
+{
+  update ( features : instance );
+  delete ( features : instance );
+
+  association _BrewOrder { with draft; }
+
+  field ( numbering : managed, readonly ) ComponentUUID;
+  field ( readonly ) BrewOrderUUID, Item, Plant, Unit, LocalLastChangedAt;
+  field ( mandatory ) Material, StorageLocation, Quantity;
+
+  determination setComponentDefaults on modify { create; }
+  determination setUnit on modify { field Material; }
+
+  validation validateComponent on save { create; field Material, StorageLocation, Quantity; }
+
+  side effects
+  {
+    field Material affects field Unit;
+  }
+
+  mapping for zvhb_brewcmp
+  {
+    BrewOrderUUID      = brew_uuid;
+    ComponentUUID      = component_uuid;
+    Item               = item;
+    Material           = material;
+    Plant              = plant;
+    StorageLocation    = storage_location;
+    Unit               = unit;
+    Quantity           = quantity;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

@@ -41,4 +41,7 @@ define abstract entity ZVHB_D_GoodsMovement
 
   @UI.hidden: true
   PurchaseOrderItem : zvhb_po_item;
+
+  @UI.hidden: true
+  BrewOrder         : zvhb_brew_order;
 }

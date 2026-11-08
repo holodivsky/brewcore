@@ -1,0 +1,34 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZVHB_C_BrewOrder alias BrewOrder
+{
+  use create;
+  use update;
+  use delete;
+
+  use action release;
+  use action startMashing;
+  use action startBoiling;
+  use action startFermentation;
+  use action startMaturation;
+  use action fill;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Component { create; with draft; }
+}
+
+define behavior for ZVHB_C_BrewOrderComponent alias Component
+{
+  use update;
+  use delete;
+
+  use association _BrewOrder { with draft; }
+}

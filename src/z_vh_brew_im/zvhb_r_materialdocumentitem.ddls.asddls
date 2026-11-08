@@ -45,6 +45,8 @@ define view entity ZVHB_R_MaterialDocumentItem
 
       purchase_order_item as PurchaseOrderItem,
 
+      brew_order         as BrewOrder,
+
       _MaterialDocument,
       _Material,
       _MovementType,

@@ -33,6 +33,12 @@ CLASS lhc_tank DEFINITION INHERITING FROM cl_abap_behavior_handler FRIENDS ltc_t
     METHODS finishCleaning FOR MODIFY
       IMPORTING keys FOR ACTION Tank~finishCleaning RESULT result.
 
+    METHODS occupy FOR MODIFY
+      IMPORTING keys FOR ACTION Tank~occupy RESULT result.
+
+    METHODS empty FOR MODIFY
+      IMPORTING keys FOR ACTION Tank~empty RESULT result.
+
     METHODS setDefaults FOR DETERMINE ON MODIFY
       IMPORTING keys FOR Tank~setDefaults.
 
@@ -77,7 +83,26 @@ CLASS lhc_tank IMPLEMENTATION.
                                         ELSE if_abap_behv=>fc-o-disabled )
         %action-finishCleaning = COND #( WHEN saved = abap_true AND tank-Status = tank_status-cleaning
                                          THEN if_abap_behv=>fc-o-enabled
+                                         ELSE if_abap_behv=>fc-o-disabled )
+        %action-occupy         = COND #( WHEN saved = abap_true AND tank-Status = tank_status-free
+                                         THEN if_abap_behv=>fc-o-enabled
+                                         ELSE if_abap_behv=>fc-o-disabled )
+        %action-empty          = COND #( WHEN saved = abap_true AND tank-Status = tank_status-occupied
+                                         THEN if_abap_behv=>fc-o-enabled
                                          ELSE if_abap_behv=>fc-o-disabled ) ) ).
+  ENDMETHOD.
+
+  METHOD occupy.
+    DATA(tanks) = set_status( tank_keys = CORRESPONDING #( keys )
+                              status    = tank_status-occupied ).
+    result = VALUE #( FOR tank IN tanks ( %tky = tank-%tky %param = tank ) ).
+  ENDMETHOD.
+
+  METHOD empty.
+    " After the beer is filled the tank has to be cleaned before the next brew
+    DATA(tanks) = set_status( tank_keys = CORRESPONDING #( keys )
+                              status    = tank_status-cleaning ).
+    result = VALUE #( FOR tank IN tanks ( %tky = tank-%tky %param = tank ) ).
   ENDMETHOD.
 
   METHOD get_global_authorizations.

@@ -21,6 +21,11 @@ etag master LocalLastChangedAt
   action ( features : instance ) startCleaning result [1] $self;
   action ( features : instance ) finishCleaning result [1] $self;
 
+  // Called by the brew order of production when fermentation starts and when the beer is filled;
+  // not exposed in the app
+  action ( features : instance ) occupy result [1] $self;
+  action ( features : instance ) empty result [1] $self;
+
   determination setDefaults on modify { create; }
 
   validation validateTankNumber on save { create; }

@@ -6,6 +6,128 @@
     <ARBGB>ZVHB_PP</ARBGB>
     <STEXT>BrewCore: Production messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Enter the beer to brew</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Beer &amp;1 has no active recipe</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Enter a planned quantity greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Enter a fermentation tank</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Tank &amp;1 does not exist</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Tank &amp;1 is in plant &amp;2, the brew order in plant &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Planned quantity &amp;1 exceeds the capacity &amp;2 of tank &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Planned start &amp;1 is in the past</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Tank &amp;1 is planned for brew order &amp;2 from &amp;3 to &amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Not enough &amp;1 in &amp;2: &amp;3 needed, &amp;4 available</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Brew order &amp;1 released: raw materials and tank &amp;2 are available</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>The brew order needs at least one component</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Component &amp;1: enter a quantity greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Component &amp;1: material &amp;2 is not an active raw material</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Mashing started: raw materials of brew order &amp;1 issued</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Tank &amp;1 is not free, its status is &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Brew order &amp;1 filled: &amp;2 received into a new batch</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Enter the filled quantity</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Brew order number could not be assigned: &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_PP</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Brew order &amp;1 is now in phase &amp;2</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>
