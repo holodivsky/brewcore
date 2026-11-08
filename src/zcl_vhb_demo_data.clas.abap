@@ -114,6 +114,12 @@ CLASS zcl_vhb_demo_data DEFINITION
     "! 200 hl in FT-02 stay new, their release fails because the yeast is not enough
     METHODS create_brew_orders.
 
+    "! Runs the open phases of the first brew up to fermentation, each saved on its own
+    METHODS run_brew_phases
+      IMPORTING
+        brew_uuid TYPE sysuuid_x16
+        status    TYPE zvhb_brew_status.
+
     "! Finishes the cleaning of a tank that an earlier run left in CIP, so fermentation can start
     METHODS prepare_tank
       IMPORTING
@@ -834,34 +840,47 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
       WHERE tank = 'FT-01'
         AND planned_quantity = 50
       INTO @DATA(first).
-    IF sy-subrc <> 0.
-      RETURN.
+    IF sy-subrc = 0.
+      prepare_tank( 'FT-01' ).
+      run_brew_phases( brew_uuid = first-brew_uuid
+                       status    = first-status ).
     ENDIF.
 
-    prepare_tank( 'FT-01' ).
+    SELECT brew_order, planned_quantity, tank, status FROM zvhb_brewhdr
+      ORDER BY brew_order
+      INTO TABLE @DATA(orders).
+    LOOP AT orders INTO DATA(order).
+      out->write( |Brew order { order-brew_order }: { order-planned_quantity NUMBER = USER } hl Pils in { order-tank }, | &&
+                  |status { order-status }| ).
+    ENDLOOP.
+  ENDMETHOD.
+
+  METHOD run_brew_phases.
+    DATA failed TYPE RESPONSE FOR FAILED EARLY zvhb_r_breworder.
+    DATA reported TYPE RESPONSE FOR REPORTED EARLY zvhb_r_breworder.
 
     DATA(phases) = VALUE string_table( ( `release` ) ( `startMashing` ) ( `startBoiling` ) ( `startFermentation` ) ).
-    DATA(phases_done) = SWITCH i( first-status WHEN 'NEW'  THEN 0
-                                               WHEN 'REL'  THEN 1
-                                               WHEN 'MASH' THEN 2
-                                               WHEN 'BOIL' THEN 3
-                                               ELSE lines( phases ) ).
+    DATA(phases_done) = SWITCH i( status WHEN 'NEW'  THEN 0
+                                         WHEN 'REL'  THEN 1
+                                         WHEN 'MASH' THEN 2
+                                         WHEN 'BOIL' THEN 3
+                                         ELSE lines( phases ) ).
 
     " Each phase is saved on its own, as the brewer would do it in the app
     LOOP AT phases INTO DATA(phase) FROM phases_done + 1.
       CASE phase.
         WHEN `release`.
           MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
-            EXECUTE release FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+            EXECUTE release FROM VALUE #( ( BrewOrderUUID = brew_uuid ) ) FAILED failed REPORTED reported.
         WHEN `startMashing`.
           MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
-            EXECUTE startMashing FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+            EXECUTE startMashing FROM VALUE #( ( BrewOrderUUID = brew_uuid ) ) FAILED failed REPORTED reported.
         WHEN `startBoiling`.
           MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
-            EXECUTE startBoiling FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+            EXECUTE startBoiling FROM VALUE #( ( BrewOrderUUID = brew_uuid ) ) FAILED failed REPORTED reported.
         WHEN `startFermentation`.
           MODIFY ENTITIES OF zvhb_r_breworder ENTITY BrewOrder
-            EXECUTE startFermentation FROM VALUE #( ( BrewOrderUUID = first-brew_uuid ) ) FAILED failed REPORTED reported.
+            EXECUTE startFermentation FROM VALUE #( ( BrewOrderUUID = brew_uuid ) ) FAILED failed REPORTED reported.
       ENDCASE.
 
       write_messages( reported ).
@@ -871,22 +890,14 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
       ENDIF.
 
       COMMIT ENTITIES RESPONSE OF zvhb_r_breworder
-        FAILED commit_failed
-        REPORTED commit_reported.
+        FAILED DATA(commit_failed)
+        REPORTED DATA(commit_reported).
 
       IF commit_failed IS NOT INITIAL.
         out->write( |Phase { phase } not saved:| ).
         write_messages( commit_reported ).
         RETURN.
       ENDIF.
-    ENDLOOP.
-
-    SELECT brew_order, planned_quantity, tank, status FROM zvhb_brewhdr
-      ORDER BY brew_order
-      INTO TABLE @DATA(orders).
-    LOOP AT orders INTO DATA(order).
-      out->write( |Brew order { order-brew_order }: { order-planned_quantity NUMBER = USER } hl Pils in { order-tank }, | &&
-                  |status { order-status }| ).
     ENDLOOP.
   ENDMETHOD.
 

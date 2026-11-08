@@ -8,6 +8,8 @@
 define view entity ZVHB_I_BeerRecipeVH
   as select from ZVHB_R_RecipeVersion as Version
     inner join   ZVHB_R_Recipe        as Recipe on Recipe.RecipeUUID = Version.RecipeUUID
+    left outer join zvhb_mattxt       as Text   on  Text.material = Recipe.Material
+                                                and Text.language = $session.system_language
 {
       @ObjectModel.text.element: [ 'MaterialName' ]
       @Search.defaultSearchElement: true
@@ -17,7 +19,7 @@ define view entity ZVHB_I_BeerRecipeVH
       @Search.defaultSearchElement: true
       @Search.fuzzinessThreshold: 0.8
       @EndUserText.label: 'Beer Description'
-      Recipe._Material.MaterialName as MaterialName,
+      Text.description              as MaterialName,
 
       @UI.hidden: true
       Version.RecipeUUID,
