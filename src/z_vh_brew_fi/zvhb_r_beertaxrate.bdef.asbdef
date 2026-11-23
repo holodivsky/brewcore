@@ -1,0 +1,60 @@
+managed implementation in class zbp_vhb_r_beertaxrate unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZVHB_R_BeerTaxRate alias Rate
+persistent table zvhb_btrate
+draft table zvhb_btrate_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  field ( numbering : managed, readonly ) RateUUID;
+  field ( readonly ) RatePerDegree, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Plant, ValidFrom, StandardRate, RatePercent, Currency;
+
+  determination setDefaults on modify { create; }
+  determination calculateRate on modify { create; field StandardRate, RatePercent; }
+
+  validation validatePlant on save { create; field Plant; }
+  validation validateValidFrom on save { create; field Plant, ValidFrom; }
+  validation validateRate on save { create; field StandardRate, RatePercent; }
+
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validatePlant;
+    validation validateValidFrom;
+    validation validateRate;
+  }
+
+  side effects
+  {
+    field StandardRate affects field RatePerDegree;
+    field RatePercent affects field RatePerDegree;
+  }
+
+  mapping for zvhb_btrate
+  {
+    RateUUID           = rate_uuid;
+    Plant              = plant;
+    ValidFrom          = valid_from;
+    StandardRate       = standard_rate;
+    RatePercent        = rate_percent;
+    RatePerDegree      = rate_per_degree;
+    Currency           = currency;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

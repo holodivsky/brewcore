@@ -1,0 +1,96 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Beer Tax Declaration',
+  typeNamePlural: 'Beer Tax Declarations',
+  title: { type: #STANDARD, value: 'Declaration' },
+  description: { type: #STANDARD, value: 'PlantName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'PeriodYear', direction: #DESC }, { by: 'PeriodMonth', direction: #DESC }] }]
+annotate entity ZVHB_C_BeerTaxDeclaration with
+{
+  @UI.facet: [
+    { id: 'Header',   purpose: #HEADER,   type: #FIELDGROUP_REFERENCE, targetQualifier: 'Totals', position: 10 },
+    { id: 'General',  purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Declaration', position: 10 },
+    { id: 'Items',    purpose: #STANDARD, type: #LINEITEM_REFERENCE, label: 'Beer Leaving the Brewery', position: 20, targetElement: '_Item' },
+    { id: 'Admin',    purpose: #STANDARD, type: #FIELDGROUP_REFERENCE, label: 'Administrative Data', position: 30, targetQualifier: 'Admin' }
+  ]
+  @UI.hidden: true
+  DeclarationUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH },
+                 { type: #FOR_ACTION, dataAction: 'generate', label: 'Generate' },
+                 { type: #FOR_ACTION, dataAction: 'recalculate', label: 'Recalculate' },
+                 { type: #FOR_ACTION, dataAction: 'submit', label: 'Submit' }]
+  @UI.identification: [{ position: 10 },
+                       { type: #FOR_ACTION, dataAction: 'recalculate', label: 'Recalculate' },
+                       { type: #FOR_ACTION, dataAction: 'submit', label: 'Submit' }]
+  @UI.selectionField: [{ position: 10 }]
+  Declaration;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.selectionField: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Plant;
+
+  @UI.hidden: true
+  PlantName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 30 }]
+  PeriodYear;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  PeriodMonth;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  @UI.selectionField: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Status;
+
+  @UI.hidden: true
+  StatusName;
+
+  @UI.lineItem: [{ position: 60, importance: #MEDIUM }]
+  @UI.identification: [{ position: 60 }]
+  RatePerDegree;
+
+  @UI.lineItem: [{ position: 70, importance: #HIGH }]
+  @UI.fieldGroup: [{ qualifier: 'Totals', position: 10 }]
+  TaxableHL;
+
+  @UI.lineItem: [{ position: 80, importance: #MEDIUM }]
+  @UI.fieldGroup: [{ qualifier: 'Totals', position: 20 }]
+  ExportHL;
+
+  @UI.lineItem: [{ position: 90, importance: #HIGH }]
+  @UI.fieldGroup: [{ qualifier: 'Totals', position: 30 }]
+  TaxAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.identification: [{ position: 70 }]
+  SubmittedBy;
+
+  @UI.identification: [{ position: 80 }]
+  SubmittedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
+  CreatedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 20 }]
+  CreatedAt;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 30 }]
+  LastChangedBy;
+
+  @UI.fieldGroup: [{ qualifier: 'Admin', position: 40 }]
+  LastChangedAt;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

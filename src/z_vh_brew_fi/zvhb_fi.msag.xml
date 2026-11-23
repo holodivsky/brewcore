@@ -7,6 +7,92 @@
     <MASTERLANG>E</MASTERLANG>
     <STEXT>BrewCore: Beer tax messages</STEXT>
    </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Plant &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Standard rate must be greater than zero</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Share of the standard rate must be between &amp;1 % and &amp;2 %</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Plant &amp;1 already has a rate valid from &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Valid-from date is missing</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Month &amp;1 is not valid</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>No beer tax rate for plant &amp;1 valid on &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Plant &amp;1 already has declaration &amp;4 for &amp;2/&amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Month &amp;1/&amp;2 has not started yet</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Declaration &amp;1 is submitted and cannot be changed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Declaration &amp;1 submitted</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Declaration &amp;1 recalculated: tax &amp;2 EUR</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Declaration for &amp;1/&amp;2 created: tax &amp;3 EUR</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_FI</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>No declaration number assigned: &amp;1</TEXT>
+    </T100>
+   </T100>
    <I18N_LANGS>
     <LANGU/>
    </I18N_LANGS>

@@ -1,0 +1,19 @@
+projection;
+strict ( 2 );
+
+define behavior for ZVHB_C_BeerTaxDeclaration alias Declaration
+{
+  use delete;
+
+  use action generate;
+  use action recalculate;
+  use action submit;
+
+  use association _Item;
+}
+
+define behavior for ZVHB_C_BeerTaxDeclItem alias Item
+{
+
+  use association _Declaration;
+}

@@ -1,0 +1,55 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: {
+  typeName: 'Declaration Item',
+  typeNamePlural: 'Declaration Items',
+  title: { type: #STANDARD, value: 'MaterialName' },
+  description: { type: #STANDARD, value: 'TreatmentName' }
+}
+@UI.presentationVariant: [{ sortOrder: [{ by: 'Item', direction: #ASC }] }]
+annotate entity ZVHB_C_BeerTaxDeclItem with
+{
+  @UI.facet: [{ id: 'General', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Item', position: 10 }]
+  @UI.hidden: true
+  ItemUUID;
+
+  @UI.hidden: true
+  DeclarationUUID;
+
+  @UI.lineItem: [{ position: 10, importance: #HIGH }]
+  @UI.identification: [{ position: 10 }]
+  Item;
+
+  @UI.lineItem: [{ position: 20, importance: #HIGH }]
+  @UI.identification: [{ position: 20 }]
+  @UI.textArrangement: #TEXT_FIRST
+  Material;
+
+  @UI.hidden: true
+  MaterialName;
+
+  @UI.lineItem: [{ position: 30, importance: #HIGH }]
+  @UI.identification: [{ position: 30 }]
+  TaxClass;
+
+  @UI.lineItem: [{ position: 40, importance: #HIGH }]
+  @UI.identification: [{ position: 40 }]
+  @UI.textArrangement: #TEXT_ONLY
+  Treatment;
+
+  @UI.hidden: true
+  TreatmentName;
+
+  @UI.lineItem: [{ position: 50, importance: #HIGH }]
+  @UI.identification: [{ position: 50 }]
+  QuantityHL;
+
+  @UI.lineItem: [{ position: 60, importance: #HIGH }]
+  @UI.identification: [{ position: 60 }]
+  TaxAmount;
+
+  @UI.hidden: true
+  Currency;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

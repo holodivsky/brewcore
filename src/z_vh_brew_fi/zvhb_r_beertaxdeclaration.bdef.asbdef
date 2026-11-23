@@ -1,0 +1,33 @@
+unmanaged implementation in class zbp_vhb_r_beertaxdeclaration unique;
+strict ( 2 );
+
+// FR-FI-03: the declaration is built from the goods issues of a month, never typed in. The business
+// object keeps its own transactional buffer and writes header and items in its saver.
+define behavior for ZVHB_R_BeerTaxDeclaration alias Declaration
+lock master
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  delete ( features : instance );
+
+  association _Item;
+
+  field ( readonly ) DeclarationUUID, Declaration, Plant, PeriodYear, PeriodMonth, Status, RatePerDegree,
+                     TaxableHL, ExportHL, TaxAmount, Currency, SubmittedBy, SubmittedAt,
+                     CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  static factory action ( authorization : global ) generate parameter ZVHB_D_DeclarationRequest [1];
+  action ( features : instance ) recalculate result [1] $self;
+  action ( features : instance ) submit result [1] $self;
+}
+
+define behavior for ZVHB_R_BeerTaxDeclItem alias Item
+lock dependent by _Declaration
+authorization dependent by _Declaration
+etag master LocalLastChangedAt
+{
+  field ( readonly ) ItemUUID, DeclarationUUID, Item, Material, TaxClass, Treatment, QuantityHL, TaxAmount,
+                     Currency, LocalLastChangedAt;
+
+  association _Declaration;
+}

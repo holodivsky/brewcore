@@ -146,8 +146,23 @@ CLASS zcl_vhb_demo_data DEFINITION
         customer      TYPE zvhb_partner
         channel       TYPE zvhb_distr_channel
         quantity      TYPE zvhb_quantity
+        material      TYPE zvhb_material DEFAULT 'PILS-BTL05'
       RETURNING
         VALUE(result) TYPE sysuuid_x16.
+
+    "! Beer tax: the Pils is registered with 11.5 °P, the bottle has a hectoliter unit, the brewery pays the
+    "! standard rate, an Austrian wholesaler buys bottles for export, and the month is declared
+    METHODS create_beer_tax.
+
+    "! Original extract registered with customs and hectoliters per bottle
+    METHODS set_excise_data.
+
+    METHODS create_tax_rate.
+
+    "! 1,200 bottles (6 hl) for a wholesaler in Vienna: export, free of German beer tax
+    METHODS create_export_sale.
+
+    METHODS declare_month.
 
     "! Delivery, goods issue and invoice, each saved on its own as in the apps
     METHODS deliver_and_bill
@@ -185,6 +200,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
     create_inspection_lots( ).
     record_inspection_results( ).
     create_sales( ).
+    create_beer_tax( ).
 
     out->write( |Done| ).
   ENDMETHOD.
@@ -1152,7 +1168,7 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
         CREATE BY \_Item
         FIELDS ( Material Quantity )
         WITH VALUE #( ( %cid_ref = 'ORDER'
-                        %target  = VALUE #( ( %cid = 'ITEM' Material = 'PILS-BTL05' Quantity = quantity ) ) ) )
+                        %target  = VALUE #( ( %cid = 'ITEM' Material = material Quantity = quantity ) ) ) )
       MAPPED DATA(mapped)
       FAILED DATA(failed)
       REPORTED DATA(reported).
@@ -1210,6 +1226,183 @@ CLASS zcl_vhb_demo_data IMPLEMENTATION.
       RETURN.
     ENDIF.
     COMMIT ENTITIES.
+  ENDMETHOD.
+
+  METHOD create_beer_tax.
+    set_excise_data( ).
+    create_tax_rate( ).
+    create_export_sale( ).
+    declare_month( ).
+  ENDMETHOD.
+
+  METHOD set_excise_data.
+    SELECT material FROM zvhb_mat
+      WHERE ( material = 'PILS' OR material = 'PILS-BTL05' ) AND original_extract = 0
+      INTO TABLE @DATA(materials).
+    SELECT SINGLE @abap_true FROM zvhb_matuom
+      WHERE material = 'PILS-BTL05' AND alt_unit = 'HL'
+      INTO @DATA(has_hectoliters).
+    IF materials IS INITIAL AND has_hectoliters = abap_true.
+      out->write( |Excise data of the Pils exists, skipped| ).
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_material
+      ENTITY Material
+        UPDATE FIELDS ( OriginalExtract )
+        WITH VALUE #( FOR m IN materials ( %is_draft = if_abap_behv=>mk-off Material = m-material
+                                           OriginalExtract = '11.5' ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+
+    " 200 bottles of 0.5 l are one hectoliter
+    IF has_hectoliters = abap_false AND failed IS INITIAL.
+      MODIFY ENTITIES OF zvhb_r_material
+        ENTITY Material
+          CREATE BY \_Unit
+          FIELDS ( AltUnit Numerator Denominator )
+          WITH VALUE #( ( %is_draft = if_abap_behv=>mk-off Material = 'PILS-BTL05'
+                          %target   = VALUE #( ( %is_draft = if_abap_behv=>mk-off %cid = 'HL'
+                                                 AltUnit = 'HL' Numerator = 200 Denominator = 1 ) ) ) )
+        FAILED failed
+        REPORTED reported.
+    ENDIF.
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_material
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+    IF commit_failed IS NOT INITIAL.
+      write_messages( commit_reported ).
+    ELSE.
+      out->write( |Pils registered with 11.5 °P, 200 bottles PILS-BTL05 = 1 hl| ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD create_tax_rate.
+    SELECT SINGLE @abap_true FROM zvhb_btrate WHERE plant = @c_brewery INTO @DATA(exists).
+    IF exists = abap_true.
+      out->write( |Beer tax rate of { c_brewery } exists, skipped| ).
+      RETURN.
+    ENDIF.
+
+    " Nordhopf belongs to a brewery group and is not an independent small brewery: standard rate
+    MODIFY ENTITIES OF zvhb_r_beertaxrate
+      ENTITY Rate
+        CREATE FIELDS ( Plant ValidFrom StandardRate RatePercent Currency )
+        WITH VALUE #( ( %cid = 'RATE' %is_draft = if_abap_behv=>mk-off Plant = c_brewery ValidFrom = '20230101'
+                        StandardRate = '0.7870' RatePercent = 100 Currency = c_currency ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    IF failed IS NOT INITIAL.
+      write_messages( reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_beertaxrate
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+    IF commit_failed IS NOT INITIAL.
+      write_messages( commit_reported ).
+    ELSE.
+      out->write( |Beer tax rate of { c_brewery }: 0.7870 EUR per hl and °P from 01.01.2023| ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD create_export_sale.
+    SELECT SINGLE partner FROM zvhb_bp WHERE partner_name = 'Bierhandel Steiner GmbH' INTO @DATA(distributor).
+    IF distributor IS NOT INITIAL.
+      out->write( |Export customer exists, skipped| ).
+      RETURN.
+    ENDIF.
+
+    MODIFY ENTITIES OF zvhb_r_businesspartner
+      ENTITY Partner
+        CREATE FIELDS ( PartnerName Street PostalCode City Country Currency PaymentTerms CreditLimit )
+        WITH VALUE #( ( %cid = 'AT' %is_draft = if_abap_behv=>mk-off PartnerName = 'Bierhandel Steiner GmbH'
+                        Street = 'Gürtel 45' PostalCode = '1150' City = 'Wien' Country = 'AT'
+                        Currency = c_currency PaymentTerms = 'NT30' CreditLimit = 30000 ) )
+        CREATE BY \_Role
+        FIELDS ( PartnerRole )
+        WITH VALUE #( ( %cid_ref = 'AT' %is_draft = if_abap_behv=>mk-off
+                        %target  = VALUE #( ( %cid = 'AT-CU' %is_draft = if_abap_behv=>mk-off PartnerRole = 'CU' ) ) ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    " The bottled stock of the demo is all taken over with movement type 561; the export needs a batch of its own
+    MODIFY ENTITIES OF zvhb_r_materialdocument
+      ENTITY MaterialDocument
+        EXECUTE postGoodsMovement
+        FROM VALUE #( ( %cid   = 'EXPORT'
+                        %param = VALUE #( MovementType    = '561'
+                                          Material        = 'PILS-BTL05'
+                                          Plant           = c_brewery
+                                          StorageLocation = 'FG01'
+                                          Quantity        = 1200
+                                          ProductionDate  = cl_abap_context_info=>get_system_date( ) - 7
+                                          HeaderText      = 'Initial stock' ) ) )
+      FAILED DATA(stock_failed)
+      REPORTED DATA(stock_reported).
+    IF failed IS NOT INITIAL OR stock_failed IS NOT INITIAL.
+      write_messages( reported ).
+      write_messages( stock_reported ).
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+    COMMIT ENTITIES.
+
+    SELECT SINGLE partner FROM zvhb_bp WHERE partner_name = 'Bierhandel Steiner GmbH' INTO @distributor.
+    DATA(order) = create_sales_order( customer = distributor channel = 'GF' quantity = 1200 ).
+    IF order IS NOT INITIAL.
+      deliver_and_bill( order ).
+      out->write( |1,200 bottles Pils (6 hl) delivered to Bierhandel Steiner GmbH, Wien: export| ).
+    ENDIF.
+  ENDMETHOD.
+
+  METHOD declare_month.
+    DATA(today) = cl_abap_context_info=>get_system_date( ).
+
+    SELECT SINGLE declaration FROM zvhb_btdecl
+      WHERE plant = @c_brewery AND period_year = @today(4) AND period_month = @today+4(2)
+      INTO @DATA(existing).
+    IF sy-subrc = 0.
+      out->write( |Beer tax declaration { existing } of { today+4(2) }/{ today(4) } exists, skipped| ).
+      RETURN.
+    ENDIF.
+
+    " FR-FI-03: the draft of the running month; Recalculate and Submit follow in the app
+    MODIFY ENTITIES OF zvhb_r_beertaxdeclaration
+      ENTITY Declaration
+        EXECUTE generate FROM VALUE #( ( %cid   = 'MONTH'
+                                         %param = VALUE #( Plant       = c_brewery
+                                                           PeriodYear  = today(4)
+                                                           PeriodMonth = today+4(2) ) ) )
+      FAILED DATA(failed)
+      REPORTED DATA(reported).
+    write_messages( reported ).
+    IF failed IS NOT INITIAL.
+      ROLLBACK ENTITIES.
+      RETURN.
+    ENDIF.
+
+    COMMIT ENTITIES RESPONSE OF zvhb_r_beertaxdeclaration
+      FAILED DATA(commit_failed)
+      REPORTED DATA(commit_reported).
+    write_messages( commit_reported ).
+    IF commit_failed IS NOT INITIAL.
+      RETURN.
+    ENDIF.
+
+    SELECT SINGLE declaration, taxable_hl, export_hl, tax_amount, currency FROM zvhb_btdecl
+      WHERE plant = @c_brewery AND period_year = @today(4) AND period_month = @today+4(2)
+      INTO @DATA(declaration).
+    out->write( |Beer tax declaration { declaration-declaration }: { declaration-taxable_hl NUMBER = USER } hl taxable, | &&
+                |{ declaration-export_hl NUMBER = USER } hl export, tax { declaration-tax_amount NUMBER = USER } | &&
+                |{ declaration-currency }, status Draft| ).
   ENDMETHOD.
 
   METHOD return_empties.

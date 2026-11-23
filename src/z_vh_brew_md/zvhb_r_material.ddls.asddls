@@ -37,6 +37,9 @@ define root view entity ZVHB_R_Material
       @EndUserText.label: 'Units per Package'
       units_per_package     as UnitsPerPackage,
 
+      @EndUserText: { label: 'Original Extract (°P)', quickInfo: 'Original extract registered with customs for the beer tax' }
+      original_extract      as OriginalExtract,
+
       @Semantics.user.createdBy: true
       created_by            as CreatedBy,
 

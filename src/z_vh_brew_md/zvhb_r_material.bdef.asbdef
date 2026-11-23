@@ -67,6 +67,7 @@ etag master LocalLastChangedAt
     IsActive           = is_active;
     ReturnablePackaging = returnable_packaging;
     UnitsPerPackage    = units_per_package;
+    OriginalExtract    = original_extract;
     CreatedBy          = created_by;
     CreatedAt          = created_at;
     LastChangedBy      = last_changed_by;

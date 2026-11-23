@@ -62,6 +62,9 @@ annotate entity ZVHB_C_Material with
   @UI.identification: [{ position: 80 }]
   UnitsPerPackage;
 
+  @UI.identification: [{ position: 90 }]
+  OriginalExtract;
+
   @UI.fieldGroup: [{ qualifier: 'Admin', position: 10 }]
   CreatedBy;
 

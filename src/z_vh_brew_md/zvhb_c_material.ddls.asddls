@@ -33,6 +33,7 @@ define root view entity ZVHB_C_Material
       @Consumption.valueHelpDefinition: [{ entity: { name: 'ZVHB_I_MaterialVH', element: 'Material' } }]
       ReturnablePackaging,
       UnitsPerPackage,
+      OriginalExtract,
 
       CreatedBy,
       CreatedAt,

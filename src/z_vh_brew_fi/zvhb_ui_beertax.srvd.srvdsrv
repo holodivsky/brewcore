@@ -1,0 +1,13 @@
+@EndUserText.label: 'BrewCore: Beer tax UI service'
+define service ZVHB_UI_BEERTAX
+{
+  expose ZVHB_C_BeerTaxDeclaration as Declarations;
+  expose ZVHB_C_BeerTaxDeclItem    as DeclarationItems;
+  expose ZVHB_C_BeerTaxRate        as TaxRates;
+
+  expose ZVHB_I_PlantVH            as Plants;
+  expose ZVHB_I_DeclStatusVH       as DeclarationStatuses;
+  expose ZVHB_I_TaxTreatmentVH     as TaxTreatments;
+  expose ZVHB_I_MaterialVH         as Materials;
+  expose I_Currency                as Currencies;
+}
