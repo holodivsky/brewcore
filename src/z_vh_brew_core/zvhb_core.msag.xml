@@ -4,6 +4,7 @@
   <asx:values>
    <T100A>
     <ARBGB>ZVHB_CORE</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
     <STEXT>BrewCore: Core messages</STEXT>
    </T100A>
    <T100>

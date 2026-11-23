@@ -4,6 +4,7 @@
   <asx:values>
    <T100A>
     <ARBGB>ZVHB_IM</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
     <STEXT>BrewCore: Inventory messages</STEXT>
    </T100A>
    <T100>
@@ -114,6 +115,30 @@
      <ARBGB>ZVHB_IM</ARBGB>
      <MSGNR>018</MSGNR>
      <TEXT>Stock of material &amp;1 was used, the receipt cannot be reversed</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Batch &amp;1 of &amp;2 expires on &amp;3: &amp;4 in stock</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Batch &amp;1 of &amp;2 expired on &amp;3: &amp;4 still in stock</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Expiry check for plant &amp;1: &amp;2 batches expire within &amp;3 days</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_IM</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Expiry check for plant &amp;1: no batch expires within &amp;2 days</TEXT>
     </T100>
    </T100>
    <I18N_LANGS>

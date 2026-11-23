@@ -1,5 +1,5 @@
 "! Application log of BrewCore on top of the released Application Log API (CL_BALI_*).
-"! Logs show up in the Fiori app Application Logs under object ZVHB_LOG.
+"! Logs are saved under object ZVHB_LOG and shown in the Job Logs app (ZVHB_UI_JOBLOG_O4).
 CLASS zcl_vhb_app_log DEFINITION
   PUBLIC
   FINAL
@@ -12,7 +12,7 @@ CLASS zcl_vhb_app_log DEFINITION
 
     "! Creates a new, empty log
     "! @parameter subobject   | Subobject, see ZIF_VHB_APP_LOG=>SUBOBJECT
-    "! @parameter external_id | Identifier shown in the Application Logs app, e.g. a document number
+    "! @parameter external_id | Identifier shown in the Job Logs app, e.g. a plant or a document number
     "! @parameter result      | The new log
     CLASS-METHODS create
       IMPORTING
@@ -44,6 +44,12 @@ CLASS zcl_vhb_app_log DEFINITION
     METHODS count_if_error
       IMPORTING
         severity TYPE zif_vhb_app_log=>ty_severity.
+
+    "! Stores the messages also in table ZVHB_LOGMSG for the Job Logs app. Reading the application log
+    "! needs authorization object S_APPL_LOG from a business role, which is not available on every system.
+    METHODS keep_copy
+      RAISING
+        cx_bali_runtime.
 ENDCLASS.
 
 
@@ -105,6 +111,8 @@ CLASS zcl_vhb_app_log IMPLEMENTATION.
     TRY.
         cl_bali_log_db=>get_instance( )->save_log( log                        = log
                                                    assign_to_current_appl_job = abap_true ).
+        keep_copy( ).
+        COMMIT WORK.
       CATCH cx_bali_runtime INTO DATA(error).
         RAISE EXCEPTION NEW zcx_vhb_app_log( textid   = zcx_vhb_app_log=>save_failed
                                              previous = error
@@ -128,6 +136,27 @@ CLASS zcl_vhb_app_log IMPLEMENTATION.
                        WHEN zif_vhb_app_log=>severity-warning THEN if_bali_constants=>c_severity_warning
                        WHEN zif_vhb_app_log=>severity-success THEN if_bali_constants=>c_severity_status
                        ELSE if_bali_constants=>c_severity_information ).
+  ENDMETHOD.
+
+  METHOD keep_copy.
+    DATA messages TYPE STANDARD TABLE OF zvhb_logmsg WITH EMPTY KEY.
+
+    IF item_count = 0.
+      RETURN.
+    ENDIF.
+
+    DATA(header) = log->get_header( ).
+    LOOP AT log->get_all_items( ) INTO DATA(item).
+      APPEND VALUE #( log_handle   = log->get_handle( )
+                      item_number  = item-log_item_number
+                      logged_at    = item-item->timestamp
+                      subobject    = header->subobject
+                      external_id  = header->external_id
+                      severity     = item-item->severity
+                      message_text = item-item->get_message_text( ) ) TO messages.
+    ENDLOOP.
+
+    INSERT zvhb_logmsg FROM TABLE @messages.
   ENDMETHOD.
 
   METHOD count_if_error.

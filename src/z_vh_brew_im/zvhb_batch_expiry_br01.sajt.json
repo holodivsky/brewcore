@@ -1,0 +1,23 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "BrewCore: Batches expiring in 14 days",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "catalogName": "ZVHB_BATCH_EXPIRY"
+  },
+  "parameters": {
+    "singleValueParameters": [
+      {
+        "name": "P_DAYS",
+        "value": "14"
+      },
+      {
+        "name": "P_PLANT",
+        "value": "BR01"
+      }
+    ]
+  }
+}

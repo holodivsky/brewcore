@@ -67,7 +67,8 @@ INTERFACE zif_vhb_app_log
     RETURNING
       VALUE(result) TYPE i.
 
-  "! Writes the log to the database; assigns it to the current application job if there is one
+  "! Writes the log to the database and commits; assigns it to the current application job if there is one.
+  "! Call it at the end of a job or console run, not inside a RAP transaction.
   METHODS save.
 
 ENDINTERFACE.

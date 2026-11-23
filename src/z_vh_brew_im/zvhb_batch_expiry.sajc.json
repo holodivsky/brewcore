@@ -1,0 +1,21 @@
+{
+  "formatVersion": "1",
+  "header": {
+    "description": "BrewCore: Expiring batches",
+    "originalLanguage": "en",
+    "abapLanguageVersion": "cloudDevelopment"
+  },
+  "generalInformation": {
+    "className": "ZCL_VHB_BATCH_EXPIRY_JOB"
+  },
+  "parameters": [
+    {
+      "name": "P_PLANT",
+      "mandatory": true
+    },
+    {
+      "name": "P_DAYS",
+      "mandatory": true
+    }
+  ]
+}

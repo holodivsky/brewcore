@@ -1,0 +1,5 @@
+@EndUserText.label: 'BrewCore: Job log UI service'
+define service ZVHB_UI_JOBLOG
+{
+  expose ZVHB_C_JobLog as JobLogs;
+}

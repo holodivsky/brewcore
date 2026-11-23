@@ -4,6 +4,7 @@
   <asx:values>
    <T100A>
     <ARBGB>ZVHB_MM</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
     <STEXT>BrewCore: Procurement messages</STEXT>
    </T100A>
    <T100>
@@ -240,6 +241,42 @@
      <ARBGB>ZVHB_MM</ARBGB>
      <MSGNR>039</MSGNR>
      <TEXT>Invoice &amp;1 rejected</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>040</MSGNR>
+     <TEXT>&amp;1 in plant &amp;2: free stock &amp;3 is below the reorder point &amp;4</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>041</MSGNR>
+     <TEXT>Purchase requisition &amp;1 created: &amp;2 of &amp;3</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>042</MSGNR>
+     <TEXT>&amp;1 is below the reorder point; &amp;2 is still open, nothing ordered</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>043</MSGNR>
+     <TEXT>Test run: a requisition for &amp;1 of &amp;2 would be created</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>044</MSGNR>
+     <TEXT>Reorder run for plant &amp;1: &amp;2 below reorder point, &amp;3 requisitions created</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZVHB_MM</ARBGB>
+     <MSGNR>045</MSGNR>
+     <TEXT>Purchase requisition for &amp;1 not created</TEXT>
     </T100>
    </T100>
    <I18N_LANGS>

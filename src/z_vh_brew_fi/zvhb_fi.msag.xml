@@ -4,6 +4,7 @@
   <asx:values>
    <T100A>
     <ARBGB>ZVHB_FI</ARBGB>
+    <MASTERLANG>E</MASTERLANG>
     <STEXT>BrewCore: Beer tax messages</STEXT>
    </T100A>
    <I18N_LANGS>
