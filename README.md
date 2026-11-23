@@ -19,6 +19,7 @@ BrewCore follows beer from the malt purchase to the customer invoice and the mon
 | Inspect-to-Release | QM | v0.8 |
 | Stock-to-Ship with FEFO and returnable empties | IM | v0.4 |
 | Order-to-Cash with ATP and deposit (Pfand) | SD | v0.9 |
+| Nightly reorder and expiring batches as application jobs | MM, IM | v0.10 |
 | German beer tax (Biersteuer) by degrees Plato | FI | v0.11 |
 | Management KPIs | AN | v0.12 |
 
@@ -52,10 +53,14 @@ RAP (managed, unmanaged save, unmanaged), CDS view entities, Fiori Elements, SAP
 ## How to run it
 
 1. Get an SAP BTP ABAP Environment (the trial works).
-2. Create package `Z_VH_BREW` and pull this repository with abapGit.
-3. Run `ZCL_VHB_SETUP_NUMBER_RANGES` with F9 in ADT to create the number range intervals.
-4. Run `ZCL_VHB_DEMO_DATA` with F9 to create the demo master data.
-5. Open the Fiori Elements preview from the service bindings.
+2. Create package `Z_VH_BREW` (superpackage `ZLOCAL`) and pull this repository with abapGit. The subpackages are created from the folders.
+3. Activate the inactive objects. If behavior definitions or number range objects stay inactive, activate them one by one: one object with an error stops a mass activation.
+4. Publish the service bindings in the `Business Services` folders of the subpackages.
+5. Check that the job catalog entries `ZVHB_REORDER` and `ZVHB_BATCH_EXPIRY` and their templates are active. A catalog entry only activates when its job class and the behavior definitions it uses are active.
+6. Run `ZCL_VHB_SETUP_NUMBER_RANGES` with F9 in ADT to create the number range intervals.
+7. Run `ZCL_VHB_DEMO_DATA` with F9 to create the demo data.
+8. Run `ZCL_VHB_SCHEDULE_JOBS` with F9 to start the jobs.
+9. Open the Fiori Elements preview from the service bindings.
 
 ## Stages
 
@@ -72,7 +77,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 | [v0.7](https://github.com/holodivsky/brewcore/releases/tag/v0.7) | Production | released |
 | [v0.8](https://github.com/holodivsky/brewcore/releases/tag/v0.8) | Quality | released |
 | [v0.9](https://github.com/holodivsky/brewcore/releases/tag/v0.9) | Sales | released |
-| v0.10 | Automation with application jobs | planned |
+| [v0.10](https://github.com/holodivsky/brewcore/releases/tag/v0.10) | Automation with application jobs | released |
 | v0.11 | Beer tax | planned |
 | v0.12 | Analytics | planned |
 | v0.13 | Tank board (freestyle UI5) | planned |
