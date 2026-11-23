@@ -78,7 +78,7 @@ Every stage is a tagged release with a description and screenshots in `docs/scre
 | [v0.8](https://github.com/holodivsky/brewcore/releases/tag/v0.8) | Quality | released |
 | [v0.9](https://github.com/holodivsky/brewcore/releases/tag/v0.9) | Sales | released |
 | [v0.10](https://github.com/holodivsky/brewcore/releases/tag/v0.10) | Automation with application jobs | released |
-| v0.11 | Beer tax | planned |
+| [v0.11](https://github.com/holodivsky/brewcore/releases/tag/v0.11) | Beer tax | released |
 | v0.12 | Analytics | planned |
 | v0.13 | Tank board (freestyle UI5) | planned |
 | v1.0 | Roles, end-to-end demo, case study | planned |
