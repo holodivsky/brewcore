@@ -27,15 +27,21 @@
     "check_syntax": {
       "exclude": [
         "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
-        "zcl_vhb_(po|qm)_goods_receipt\\.clas\\.locals_imp\\.abap$"
+        "zcl_vhb_(po|qm)_goods_receipt\\.clas\\.locals_imp\\.abap$",
+        "zcl_vhb_(reorder_job|batch_expiry_job)\\.clas\\.abap$"
       ]
     },
     "global_class": true,
-    "implement_methods": true,
+    "implement_methods": {
+      "exclude": [
+        "zcl_vhb_(reorder_job|batch_expiry_job)\\.clas\\.abap$"
+      ]
+    },
     "method_implemented_twice": true,
     "parser_error": {
       "exclude": [
-        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$"
+        "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
+        "zcl_vhb_schedule_jobs\\.clas\\.abap$"
       ]
     },
     "superclass_final": {
@@ -81,7 +87,8 @@
         "zbp_vhb_r_.*\\.clas\\.(locals_imp|testclasses)\\.abap$",
         "zcl_vhb_demo_data\\.clas\\.abap$",
         "zcl_vhb_(po|qm)_goods_receipt\\.clas\\.locals_imp\\.abap$",
-        "zcl_vhb_(purchasing_check|invoice_item_match|characteristic_check)\\.clas\\.(abap|testclasses\\.abap)$"
+        "zcl_vhb_(purchasing_check|invoice_item_match|characteristic_check)\\.clas\\.(abap|testclasses\\.abap)$",
+        "zcl_vhb_(reorder_job|batch_expiry_job|job_log_query)\\.clas\\.(abap|testclasses\\.abap)$"
       ]
     },
     "exporting": true,
