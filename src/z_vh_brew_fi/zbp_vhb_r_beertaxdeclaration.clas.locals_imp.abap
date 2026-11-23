@@ -365,8 +365,10 @@ CLASS lhc_declaration IMPLEMENTATION.
       DATA(request) = CORRESPONDING ty_request( key-%param ).
       DATA(rate) = VALUE zvhb_btrate( ).
       DATA(problem) = check_request( request = request today = today ).
+      DATA(month_end) = COND d( WHEN problem IS INITIAL
+                                THEN last_day( year = request-periodyear month = request-periodmonth ) ).
       IF problem IS INITIAL.
-        rate = find_rate( plant = request-plant on_date = last_day( year = request-periodyear month = request-periodmonth ) ).
+        rate = find_rate( plant = request-plant on_date = month_end ).
         problem = COND #( WHEN rate IS INITIAL THEN '011' ).
       ENDIF.
 
@@ -380,7 +382,7 @@ CLASS lhc_declaration IMPLEMENTATION.
                                                                WHEN problem = '013' THEN request-periodmonth
                                                                ELSE request-plant )
                                             v2       = COND #( WHEN problem = '011'
-                                                               THEN |{ last_day( year = request-periodyear month = request-periodmonth ) DATE = USER }|
+                                                               THEN |{ month_end DATE = USER }|
                                                                WHEN problem = '013' THEN request-periodyear
                                                                ELSE request-periodmonth )
                                             v3       = request-periodyear ) ) TO reported-declaration.
